@@ -1,0 +1,64 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700;900&display=swap");
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+/* !Workbench */
+#workbenchPageContent {
+  max-width: 100%;
+}
+
+.ControlZone--emphasisBackground,
+.CanvasZoneContainer {
+  background-color: transparent !important;
+}
+
+.content_3f3fd3c2,
+.CanvasZone {
+  padding: 0 !important;
+  max-width: 100% !important;
+}
+
+.ToolbarButtonTooltip {
+  display: none;
+}
+
+.Canvas {
+  margin: 0 !important;
+}
+/* !workbench */
+h2.fc-toolbar-title {
+  font-size: 1rem !important;
+}
+div#myCalender {
+  max-width: 50rem;
+  margin: auto;
+}
+/* button.fc-dayGridMonth-button.fc-button.fc-button-primary,
+button.fc-timeGridWeek-button.fc-button.fc-button-primary,
+button.fc-timeGridDay-button.fc-button.fc-button-primary,
+button.fc-listWeek-button.fc-button.fc-button-primary {
+  display: none;
+} */
+
+/* .fc-header-toolbar.fc-toolbar.fc-toolbar-ltr .fc-toolbar-chunk:last-child {
+  display: none;
+} */
+.fc .fc-button-primary {
+  background-color: #011e41 !important;
+}
+.fc .fc-toolbar {
+  flex-direction: row-reverse;
+}
+/* .fc .fc-button .fc-icon {
+  font-size: 0.8rem !important;
+}
+button.fc-today-button.fc-button.fc-button-primary {
+  font-size: 0.8rem !important;
+} */
+.fc .fc-toolbar.fc-header-toolbar {
+  margin-bottom: 0.8rem !important;
+}
+a.fc-col-header-cell-cushion {
+  font-weight: normal;
+}

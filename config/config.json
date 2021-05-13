@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "flx-calender-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/flxCalender/FlxCalenderWebPart.js",
+          "manifest": "./src/webparts/flxCalender/FlxCalenderWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "FlxCalenderWebPartStrings": "lib/webparts/flxCalender/loc/{locale}.js"
+  }
+}
