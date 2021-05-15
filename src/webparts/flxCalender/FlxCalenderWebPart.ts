@@ -9,6 +9,7 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import styles from './FlxCalenderWebPart.module.scss';
 import * as strings from 'FlxCalenderWebPartStrings';
 import * as $ from "jquery";
+import { sp } from "@pnp/pnpjs";
 import 'fullcalendar';
 import { Calendar } from '@fullcalendar/core';
 import interactionPlugin from '@fullcalendar/interaction';
@@ -16,17 +17,22 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
 
-import "../../ExternalRef/CSS/style.css"
+import "../../ExternalRef/CSS/style.css";
+import * as moment from  "moment";
+
+var arrCalendarEvents=[];
 export interface IFlxCalenderWebPartProps {
   description: string;
-} 
+}
+ 
   
 export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalenderWebPartProps> {
   public onInit(): Promise<void> {
-    return super.onInit().then((_) => {     
-      // sp.setup({
-      //   spfxContext: this.context,
-      // });
+    return super.onInit().then((_) => 
+    {     
+      sp.setup({
+         spfxContext: this.context,
+      })
       
     });
   } 
@@ -35,166 +41,10 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   public render(): void {
     this.domElement.innerHTML = `
       <div id="myCalender"></div>`;
-      
-      $(document).ready(()=>{
-          var calendarEl = document.getElementById('myCalender');
-      
-        var calendar = new Calendar(calendarEl, {
-          plugins: [ interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin ],
-          headerToolbar: {
-            left: 'prev,next today',
-            center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-          },
-          initialDate: '2018-01-12',
-          navLinks: true, // can click day/week names to navigate views
-          editable: true,
-          dayMaxEvents: true, // allow "more" link when too many events
-          events: [
-            {
-              title: 'All Day Event',
-              start: '2018-01-01',
-            },
-            {
-              title: 'Long Event',
-              start: '2018-01-07',
-              end: '2018-01-10'
-            },
-            {
-              groupId: "999",
-              title: 'Repeating Event',
-              start: '2018-01-09T16:00:00'
-            },
-            {
-              groupId: "999",
-              title: 'Repeating Event',
-              start: '2018-01-16T16:00:00'
-            },
-            {
-              title: 'Conference',
-              start: '2018-01-11',
-              end: '2018-01-13'
-            },
-            {
-              title: 'Meeting',
-              start: '2018-01-12T10:30:00',
-              end: '2018-01-12T12:30:00'
-            },
-            {
-              title: 'Lunch',
-              start: '2018-01-12T12:00:00'
-            },
-            {
-              title: 'Meeting',
-              start: '2018-01-12T14:30:00'
-            },
-            {
-              title: 'Happy Hour',
-              start: '2018-01-12T17:30:00'
-            },
-            {
-              title: 'Dinner',
-              start: '2018-01-12T20:00:00'
-            },
-            {
-              title: 'Birthday Party',
-              start: '2018-01-13T07:00:00'
-            },
-            {
-              title: 'Click for Google',
-              url: 'http://google.com/',
-              start: '2018-01-28'
-            }
-          ]
-        });
-      
-        calendar.render();
-      })
 
-      // document.addEventListener('DOMContentLoaded', function() {
-      //   var calendarEl = document.getElementById('myCalender');
+      getCalendarEvents();
+      //BindCalendar("");
       
-      //   var calendar = new Calendar(calendarEl, {
-      //     plugins: [ interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin ],
-      //     headerToolbar: {
-      //       left: 'prev,next today',
-      //       center: 'title',
-      //       right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
-      //     },
-      //     initialDate: '2018-01-12',
-      //     navLinks: true, // can click day/week names to navigate views
-      //     editable: true,
-      //     dayMaxEvents: true, // allow "more" link when too many events
-      //     events: [
-      //       {
-      //         title: 'All Day Event',
-      //         start: '2018-01-01',
-      //       },
-      //       {
-      //         title: 'Long Event',
-      //         start: '2018-01-07',
-      //         end: '2018-01-10'
-      //       },
-      //       {
-      //         groupId: "999",
-      //         title: 'Repeating Event',
-      //         start: '2018-01-09T16:00:00'
-      //       },
-      //       {
-      //         groupId: "999",
-      //         title: 'Repeating Event',
-      //         start: '2018-01-16T16:00:00'
-      //       },
-      //       {
-      //         title: 'Conference',
-      //         start: '2018-01-11',
-      //         end: '2018-01-13'
-      //       },
-      //       {
-      //         title: 'Meeting',
-      //         start: '2018-01-12T10:30:00',
-      //         end: '2018-01-12T12:30:00'
-      //       },
-      //       {
-      //         title: 'Lunch',
-      //         start: '2018-01-12T12:00:00'
-      //       },
-      //       {
-      //         title: 'Meeting',
-      //         start: '2018-01-12T14:30:00'
-      //       },
-      //       {
-      //         title: 'Happy Hour',
-      //         start: '2018-01-12T17:30:00'
-      //       },
-      //       {
-      //         title: 'Dinner',
-      //         start: '2018-01-12T20:00:00'
-      //       },
-      //       {
-      //         title: 'Birthday Party',
-      //         start: '2018-01-13T07:00:00'
-      //       },
-      //       {
-      //         title: 'Click for Google',
-      //         url: 'http://google.com/',
-      //         start: '2018-01-28'
-      //       }
-      //     ]
-      //   });
-      
-      //   calendar.render();
-      // });
-      // let calendarEl = document.querySelector("#myCalender")  as HTMLCanvasElement;
-      // let calendar = new Calendar(calendarEl, {
-      //   plugins: [ dayGridPlugin, timeGridPlugin, listPlugin ],
-      //   initialView: 'dayGridMonth',
-      //   headerToolbar: {
-      //     left: 'prev,next today',
-      //     center: 'title',
-      //     right: 'dayGridMonth,timeGridWeek,listWeek'
-      //   }
-      // });
   }
 
   protected get dataVersion(): Version {
@@ -222,4 +72,60 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       ]
     };
   }
+}
+
+
+function BindCalendar(Calendardetails)
+{
+  var calendarEl = document.getElementById('myCalender');
+        var calendar = new Calendar(calendarEl, {
+          plugins: [ interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin ],
+          headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+          },
+          initialDate: '2018-01-12',
+          navLinks: true, // can click day/week names to navigate views
+          editable: true,
+          dayMaxEvents: true, // allow "more" link when too many events
+          events: Calendardetails,
+          eventDidMount: function (event) {
+            $(event.el).attr('data-trigger', 'focus')
+            $(event.el).attr('tabindex', 0)
+        }
+        });
+      
+        calendar.render();
+}
+
+async function getCalendarEvents()
+{
+    await sp.web.lists.getByTitle("EventsList").items.select("*").top(5000).get().then((items: any) => 
+    {
+      
+      for(var i=0;i<items.length;i++)
+      {
+
+        console.log(moment(items[i].StartDate).format("YYYY-MM-DD")+"T"+moment(items[i].StartDate).format("HH:mm")+":00");
+        console.log(moment(items[i].EndDate).format("YYYY-MM-DD")+"T"+moment(items[i].EndDate).format("HH:mm")+":00");
+
+        var sdate=moment(items[i].StartDate).format("YYYY-MM-DD")+"T"+moment(items[i].StartDate).format("HH:mm")+":00";
+        var edate=moment(items[i].EndDate).format("YYYY-MM-DD")+"T"+moment(items[i].EndDate).format("HH:mm")+":00";
+
+        arrCalendarEvents.push({
+          title: items[i].Title,
+          start: sdate,
+          end:edate
+        });
+
+        
+      }
+
+      BindCalendar(arrCalendarEvents);
+
+    }).catch(function(error)
+    {
+          alert("Error In Calendar Webpart");
+    });
 }

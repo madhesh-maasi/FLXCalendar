@@ -22,8 +22,11 @@
     "@microsoft/sp-office-ui-fabric-core": "1.11.0",
     "@microsoft/sp-property-pane": "1.11.0",
     "@microsoft/sp-webpart-base": "1.11.0",
+    "@pnp/pnpjs": "^2.4.0",
     "fullcalendar": "^5.7.0",
-    "jquery": "^3.6.0"
+    "jquery": "^3.6.0",
+    "moment": "^2.29.1",
+    "npm-install": "^1.7.4"
   },
   "devDependencies": {
     "@microsoft/rush-stack-compiler-3.3": "0.3.5",
