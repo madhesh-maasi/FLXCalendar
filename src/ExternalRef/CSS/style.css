@@ -30,7 +30,7 @@
 h2.fc-toolbar-title {
   font-size: 1rem !important;
 }
-div#myCalender {
+.calendar-section {
   max-width: 50rem;
   margin: auto;
 }
@@ -61,4 +61,25 @@ button.fc-today-button.fc-button.fc-button-primary {
 }
 a.fc-col-header-cell-cushion {
   font-weight: normal;
+}
+.calendar-section .btn-section {
+  margin-bottom: 1rem;
+}
+button.btn.btn-theme {
+  color: #fff;
+  background: #011e41;
+}
+.modal-body,
+.calendar-section .modal-footer {
+  padding: 1rem 2rem !important;
+}
+.modal-footer {
+  border-top: 0 !important;
+}
+.modal-header {
+  border-bottom: 0 !important;
+}
+.calendar-popup textarea {
+  resize: none;
+  min-height: 5rem;
 }
