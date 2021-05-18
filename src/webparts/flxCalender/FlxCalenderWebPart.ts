@@ -61,19 +61,19 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         <div class="row align-items-center my-3"><div class="col-5">Title</div><div class="col-1">:</div><div class="col-6"><input type="text" class="form-control" id="eventTitle" aria-describedby=""></div></div>
         <div class="row align-items-center my-3"><div class="col-5">Start Date</div><div class="col-1">:</div><div class="col-6"><input type="date" class="form-control" id="Startdate" value="2013-01-08" aria-describedby=""></div></div>
         <div class="row align-items-center my-3"><div class="col-5">Start Time</div><div class="col-1">:</div>
-        <select id="StartTime">
+        <select class="form-control" id="StartTime">
         <option value="00">00</option>
         </select>
-        <select id="StartTimeHour">
+        <select class="form-control" id="StartTimeHour">
         <option value="00">00</option>
         </select>
         </div>
         <div class="row align-items-center my-3"><div class="col-5">End Date</div><div class="col-1">:</div><div class="col-6"><input type="date" class="form-control" id="Enddate" value="2013-01-08" aria-describedby=""></div></div>
         <div class="row align-items-center my-3"><div class="col-5">End Time</div><div class="col-1">:</div>
-        <select id="EndTime">
+        <select class="form-control" id="EndTime">
         <option value="00">00</option>
         </select>
-        <select id="EndTimeHour">
+        <select class="form-control" id="EndTimeHour">
         <option value="00">00</option>
         </select>
         </div>
@@ -95,7 +95,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   </div> 
 </div> 
 
-      <div id="myCalendar"></div>
+      <div id="myCalendar"></div> 
       </div>`;
       
       var htmlfortime="";
@@ -224,7 +224,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   }
 }
 
-
+   
 function BindCalendar(Calendardetails)
 {
   var calendarEl = document.getElementById('myCalendar');
@@ -235,7 +235,7 @@ function BindCalendar(Calendardetails)
           headerToolbar: {
             left: 'prev,next today',
             center: 'title',
-            right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+            right: 'dayGridMonth' 
           },
           initialDate: moment(new Date()).format("YYYY-MM-DD"),
           navLinks: true, // can click day/week names to navigate views
@@ -251,6 +251,10 @@ function BindCalendar(Calendardetails)
         });
         calendar.refetchEvents();
         calendar.render();
+        $('.clsEventEdit').each(function()
+{
+    $(this).removeClass('fc-event-draggable');
+});
         cleardata();
         $("#Startdate,#Enddate").val(moment().format("YYYY-MM-DD"));
 }

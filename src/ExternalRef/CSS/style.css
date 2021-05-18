@@ -84,12 +84,23 @@ button.btn.btn-theme {
   min-height: 5rem;
 }
 
-select#StartTime,#EndTime {
+select#StartTime,
+#EndTime {
   width: 76px;
   margin: 10px;
 }
 
-select#StartTimeHour,#EndTimeHour {
+select#StartTimeHour,
+#EndTimeHour {
   width: 76px;
 }
 
+a.fc-col-header-cell-cushion {
+  color: #011e41;
+  text-decoration: none;
+  font-weight: bold;
+}
+a.fc-daygrid-day-number {
+  color: #011e41;
+  text-decoration: none;
+}
