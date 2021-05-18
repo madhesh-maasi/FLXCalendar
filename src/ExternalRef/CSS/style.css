@@ -83,3 +83,13 @@ button.btn.btn-theme {
   resize: none;
   min-height: 5rem;
 }
+
+select#StartTime,#EndTime {
+  width: 76px;
+  margin: 10px;
+}
+
+select#StartTimeHour,#EndTimeHour {
+  width: 76px;
+}
+
