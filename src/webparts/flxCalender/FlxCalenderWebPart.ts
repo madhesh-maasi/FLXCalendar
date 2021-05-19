@@ -249,10 +249,6 @@ function BindCalendar(Calendardetails)
         });
         calendar.refetchEvents();
         calendar.render();
-        $('.clsEventEdit').each(function()
-{
-    $(this).removeClass('fc-event-draggable');
-});
         cleardata();
         $("#Startdate,#Enddate").val(moment().format("YYYY-MM-DD"));
 }
@@ -353,4 +349,11 @@ function cleardata()
   $("#Startdate,#Enddate").val(moment().format("YYYY-MM-DD"));
   $("#StartTime,#EndTime,#StartTimeHour,#EndTimeHour").val("00");
   EditID="";
+
+  $('.clsEventEdit').each(function()
+  {
+      $(this).removeClass('fc-event-draggable');
+  });
+
+
 }
