@@ -93,7 +93,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     </div>
   </div> 
 </div>  
-      <div id="myCalendar"></div> 
+      <div id="myCalendar"></div>  
       </div>`;
       
       var htmlfortime="";
