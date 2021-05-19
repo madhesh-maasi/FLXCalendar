@@ -63,11 +63,13 @@ a.fc-col-header-cell-cushion {
   font-weight: normal;
 }
 .calendar-section .btn-section {
-  margin-bottom: 1rem;
+  /* margin-bottom: 1rem; */
+  height: 0;
 }
 button.btn.btn-theme {
   color: #fff;
   background: #011e41;
+  padding: 0.24rem 1rem;
 }
 .modal-body,
 .calendar-section .modal-footer {
@@ -103,4 +105,24 @@ a.fc-col-header-cell-cushion {
 a.fc-daygrid-day-number {
   color: #011e41;
   text-decoration: none;
+}
+button.fc-today-button.fc-button.fc-button-primary {
+  margin-right: 5rem;
+}
+button.btn.btn-theme.btn-openmodal {
+  position: relative;
+  /* top: 3.2rem; */
+}
+table.fc-scrollgrid.fc-scrollgrid-liquid {
+  background: #fff;
+  /* border: 2px solid #adadad; */
+}
+table.fc-scrollgrid.fc-scrollgrid-liquid,
+table.fc-scrollgrid.fc-scrollgrid-liquid th,
+table.fc-scrollgrid.fc-scrollgrid-liquid td {
+  border: 2px solid #cacaca;
+  border-collapse: collapse;
+}
+table.fc-scrollgrid.fc-scrollgrid-liquid th {
+  border-bottom: none;
 }

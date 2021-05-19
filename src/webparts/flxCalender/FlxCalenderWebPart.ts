@@ -44,11 +44,11 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   } 
 
  
-  public render(): void {
+  public render(): void {  
     this.domElement.innerHTML = `
     <div class="calendar-section">
     <div class="btn-section text-end"> 
-    <button class="btn btn-theme btn-openmodal" data-bs-toggle="modal" data-bs-target="#calendarModal">Add Event</button>
+    <button class="btn btn-theme btn-openmodal" data-bs-toggle="modal" data-bs-target="#calendarModal">Add</button>
     </div>
     <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -88,13 +88,11 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         <div class="viewScreen">
         <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
         <button type="button" class="btn btn-sm btn-theme" id="btnmodalEdit" style="display:none">Update</button>
-        
         </div>
       </div>
     </div>
   </div> 
-</div> 
-
+</div>  
       <div id="myCalendar"></div> 
       </div>`;
       
