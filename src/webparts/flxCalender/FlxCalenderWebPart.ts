@@ -22,11 +22,14 @@ import listPlugin from '@fullcalendar/list';
 
 import "../../ExternalRef/CSS/style.css";
 import "../../ExternalRef/CSS/bootstrap.css";
+import "../../ExternalRef/CSS/datetimepicker.css";
 import "../../ExternalRef/js/bootstrap.js";
+import "../../ExternalRef/js/datetimepicker.js";
 import * as moment from  "moment";
-
+ 
 var arrCalendarEvents=[];
 var EditID="";
+let listUrl="";
 export interface IFlxCalenderWebPartProps {
   description: string;
 }
@@ -45,40 +48,49 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 
  
   public render(): void {  
+    listUrl = this.context.pageContext.web.absoluteUrl;
+    var siteindex = listUrl.toLocaleLowerCase().indexOf("sites");
+    listUrl = listUrl.substr(siteindex - 1) + "/Lists/";
     this.domElement.innerHTML = `
     <div class="calendar-section">
     <div class="btn-section text-end"> 
     <button class="btn btn-theme btn-openmodal" data-bs-toggle="modal" data-bs-target="#calendarModal">Add</button>
     </div>
     <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog calendar-modal">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="calendarModalLabel">Add / Update Event</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body calendar-popup">
-        <div class="row align-items-center my-3"><div class="col-5">Title</div><div class="col-1">:</div><div class="col-6"><input type="text" class="form-control" id="eventTitle" aria-describedby=""></div></div>
-        <div class="row align-items-center my-3"><div class="col-5">Start Date</div><div class="col-1">:</div><div class="col-6"><input type="date" class="form-control" id="Startdate" value="2013-01-08" aria-describedby=""></div></div>
-        <div class="row align-items-center my-3"><div class="col-5">Start Time</div><div class="col-1">:</div>
+        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control" id="eventTitle" aria-describedby=""></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Start Date</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control" id="Startdate" value="" aria-describedby=""></div></div>
+        
+        <!--<div class="row align-items-center my-3"><div class="col-4">Start Time</div><div class="col-1">:</div>
         <select class="form-control" id="StartTime">
         <option value="00">00</option>
         </select>
         <select class="form-control" id="StartTimeHour">
         <option value="00">00</option>
         </select>
-        </div>
-        <div class="row align-items-center my-3"><div class="col-5">End Date</div><div class="col-1">:</div><div class="col-6"><input type="date" class="form-control" id="Enddate" value="2013-01-08" aria-describedby=""></div></div>
-        <div class="row align-items-center my-3"><div class="col-5">End Time</div><div class="col-1">:</div>
+        </div>-->
+
+        <div class="row align-items-center my-3"><div class="col-4">End Date</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control" id="Enddate" value="" aria-describedby=""></div></div>
+        
+        <!-- <div class="row align-items-center my-3"><div class="col-4">End Time</div><div class="col-1">:</div>
+        <div class="col-7">
         <select class="form-control" id="EndTime">
         <option value="00">00</option>
         </select>
         <select class="form-control" id="EndTimeHour">
         <option value="00">00</option>
-        </select>
-        </div>
-        <!--<div class="row align-items-center my-3"><div class="col-5">Type of Event</div><div class="col-1">:</div><div class="col-6"><select class="form-control" id="" aria-describedby=""><option>Select</option></select></div></div>-->
-        <div class="row align-items-center my-3"><div class="col-5">Description</div><div class="col-1">:</div><div class="col-6"><textarea class="form-control" id="eventDescritpion" aria-describedby=""></textarea></div></div>
+        </select></div>
+        </div>-->
+
+        <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div><div class="col-7"><select class="form-control" id="TypeOfEvent" aria-describedby=""><option>Select</option></select></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Color</div><div class="col-1">:</div><div class="col-7"><select class="form-control" id="EventColor" aria-describedby=""><option>Select</option></select></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Description</div><div class="col-1">:</div><div class="col-7"><textarea class="form-control" id="eventDescritpion" aria-describedby=""></textarea></div></div>
       </div> 
       <div class="modal-footer"> 
         <div class="addScreen">
@@ -95,7 +107,19 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 </div>  
       <div id="myCalendar"></div>  
       </div>`;
-      
+      BindTypes();
+
+    $("#Startdate").datetimepicker(
+      {
+        dateFormat:'dd/mm/YY H:m',
+      }
+    );
+    $("#Enddate").datetimepicker(
+      {
+        dateFormat:'dd/mm/YY H:m',
+      }
+    );
+
       var htmlfortime="";
       for(var i=0;i<24;i++)
       {
@@ -169,14 +193,18 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         if(filteredarray[0].title)
         $("#eventTitle").val(filteredarray[0].title);
 
-        $("#Startdate").val(moment(filteredarray[0].start).format("YYYY-MM-DD"));
-        $("#Enddate").val(moment(filteredarray[0].end).format("YYYY-MM-DD"));
-
-        $("#StartTime").val(moment(filteredarray[0].start).format("HH"));
-        $("#StartTimeHour").val(moment(filteredarray[0].start).format("mm"));
-        $("#EndTime").val(moment(filteredarray[0].end).format("HH"));
-        $("#EndTimeHour").val(moment(filteredarray[0].end).format("mm"));
-
+        // $("#Startdate").val(moment(filteredarray[0].start).format("YYYY-MM-DD"));
+        // $("#Enddate").val(moment(filteredarray[0].end).format("YYYY-MM-DD"));
+        // Maasi
+        
+        $("#Startdate").val(moment(filteredarray[0].start).format("YYYY/MM/DD HH:mm"));
+        $("#Enddate").val(moment(filteredarray[0].end).format("YYYY/MM/DD HH:mm"));
+        // $("#StartTime").val(moment(filteredarray[0].start).format("HH"));
+        // $("#StartTimeHour").val(moment(filteredarray[0].start).format("mm"));
+        // $("#EndTime").val(moment(filteredarray[0].end).format("HH"));
+        // $("#EndTimeHour").val(moment(filteredarray[0].end).format("mm"));
+          $("#TypeOfEvent").val(filteredarray[0].TypeOfEvent)
+          $("#EventColor").val(filteredarray[0].ColorId)
         if(filteredarray[0].description)
         $("#eventDescritpion").val(filteredarray[0].description);
 
@@ -222,7 +250,17 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   }
 }
 
-   
+const BindTypes = async()=>{
+ let TypesOfEvent =  await sp.web.getList(listUrl + "TypeOfEvent").items.top(5000).get();
+ let typesHtml = "<option value='0'>Select</option>"
+ let typescolorHtml = "<option value='0'>Select</option>"
+ TypesOfEvent.forEach((li)=>{
+  typesHtml +=`<option value="${li.ID}">${li.Title}</option>`
+  typescolorHtml +=`<option value="${li.ID}">${li.Color}</option>`
+ })
+ $("#TypeOfEvent").html(typesHtml);
+ $("#EventColor").html(typescolorHtml);
+   }
 function BindCalendar(Calendardetails)
 {
   var calendarEl = document.getElementById('myCalendar');
@@ -259,8 +297,9 @@ function BindCalendar(Calendardetails)
 
 async function getCalendarEvents()
 {
-    await sp.web.lists.getByTitle("EventsList").items.select("*").top(5000).get().then((items: any) => 
+    await sp.web.lists.getByTitle("EventsList").items.select("*","TypeOfEvent/Title","TypeOfEvent/ID","Color/Title","Color/ID","Color/Color").expand("TypeOfEvent","Color").top(5000).get().then((items: any) => 
     {
+      console.log(items);
       
       arrCalendarEvents=[];
       for(var i=0;i<items.length;i++)
@@ -276,7 +315,11 @@ async function getCalendarEvents()
           title: items[i].Title,
           start: sdate,
           end:edate,
-          description: items[i].Description
+          description: items[i].Description,
+          backgroundColor:items[i].Color.Color,
+          borderColor :items[i].Color.Color,
+          ColorId:items[i].ColorId,
+          TypeOfEvent:items[i].TypeOfEventId
         });
 
         
@@ -294,15 +337,21 @@ async function getCalendarEvents()
 async function insertevent()
 {
   
-  var starttime=$("#Startdate").val()+"T"+$("#StartTime").val()+":"+$("#StartTimeHour").val()+":00";
-  var endtime=$("#Enddate").val()+"T"+$("#EndTime").val()+":"+$("#EndTimeHour").val()+":00";
+  // var starttime=$("#Startdate").val()+"T"+$("#StartTime").val()+":"+$("#StartTimeHour").val()+":00";
+  // var endtime=$("#Enddate").val()+"T"+$("#EndTime").val()+":"+$("#EndTimeHour").val()+":00";
+  let starttime = $("#Startdate").val().split(" ").join("T");
+  let endtime = $("#Enddate").val().split(" ").join("T");
 
-  console.log(moment(starttime).format());
+  // console.log(moment(starttime).format());
+  console.log($("#TypeOfEvent").val());
+  
   var requestdata = {
     Title:$("#eventTitle").val(),
     StartDate: starttime,
     EndDate:endtime,
-    Description:$("#eventDescritpion").val()
+    Description:$("#eventDescritpion").val(),
+    TypeOfEventId:parseInt($("#TypeOfEvent").val()),
+    ColorId:parseInt($("#EventColor").val())
   };
     await sp.web.lists
       .getByTitle("EventsList")
@@ -322,15 +371,19 @@ async function insertevent()
 async function updateevent(itemid)
 {
   
-  var starttime=$("#Startdate").val()+"T"+$("#StartTime").val()+":"+$("#StartTimeHour").val()+":00";
-  var endtime=$("#Enddate").val()+"T"+$("#EndTime").val()+":"+$("#EndTimeHour").val()+":00";
-
+  // var starttime=$("#Startdate").val()+"T"+$("#StartTime").val()+":"+$("#StartTimeHour").val()+":00";
+  // var endtime=$("#Enddate").val()+"T"+$("#EndTime").val()+":"+$("#EndTimeHour").val()+":00";
+  //Maasi
+  let starttime = $("#Startdate").val().split(" ").join("T");
+  let endtime = $("#Enddate").val().split(" ").join("T");
   console.log(moment(starttime).format());
   var requestdata = {
     Title:$("#eventTitle").val(),
     StartDate: starttime,
     EndDate:endtime,
-    Description:$("#eventDescritpion").val()
+    Description:$("#eventDescritpion").val(),
+    TypeOfEventId:parseInt($("#TypeOfEvent").val()),
+    ColorId:parseInt($("#EventColor").val())
   };
     await sp.web.lists
       .getByTitle("EventsList")
@@ -350,7 +403,9 @@ function cleardata()
 {
   $("#eventTitle,#eventDescritpion").val("");
   $("#Startdate,#Enddate").val("");
-  $("#Startdate,#Enddate").val(moment().format("YYYY-MM-DD"));
+  $("#Startdate,#Enddate").val(moment().format("YYYY/MM/DD HH:mm"));
   $("#StartTime,#EndTime,#StartTimeHour,#EndTimeHour").val("00");
+  $("#EventColor").val("0");
+  $("#TypeOfEvent").val("0");
   EditID="";
 }

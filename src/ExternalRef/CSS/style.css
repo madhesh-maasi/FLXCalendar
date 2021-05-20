@@ -126,3 +126,6 @@ table.fc-scrollgrid.fc-scrollgrid-liquid td {
 table.fc-scrollgrid.fc-scrollgrid-liquid th {
   border-bottom: none;
 }
+.calendar-modal {
+  max-width: 42rem !important;
+}

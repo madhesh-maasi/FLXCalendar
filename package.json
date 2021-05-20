@@ -25,6 +25,7 @@
     "@pnp/pnpjs": "^2.4.0",
     "fullcalendar": "^5.7.0",
     "jquery": "^3.6.0",
+    "jquery-datetimepicker": "^2.5.21",
     "moment": "^2.29.1",
     "npm-install": "^1.7.4"
   },
