@@ -45,7 +45,9 @@ button.fc-listWeek-button.fc-button.fc-button-primary {
   display: none;
 } */
 .fc .fc-button-primary {
-  background-color: #011e41 !important;
+  border: 1px solid #011e41;
+  color: #011e41;
+  background: #fff;
 }
 .fc .fc-toolbar {
   flex-direction: row-reverse;
@@ -70,6 +72,16 @@ button.btn.btn-theme {
   color: #fff;
   background: #011e41;
   padding: 0.24rem 1rem;
+}
+.btn-outline-theme {
+  border: 1px solid #011e41 !important;
+  color: #011e41 !important;
+  background: #fff !important;
+  padding: 0.24rem 1rem !important;
+}
+.btn-outline-theme:hover {
+  color: #fff !important;
+  background: #011e41 !important;
 }
 .modal-body,
 .calendar-section .modal-footer {
@@ -109,7 +121,7 @@ a.fc-daygrid-day-number {
 button.fc-today-button.fc-button.fc-button-primary {
   margin-right: 5rem;
 }
-button.btn.btn-theme.btn-openmodal {
+button.btn.btn-outline-theme.btn-openmodal {
   position: relative;
   /* top: 3.2rem; */
 }
@@ -128,4 +140,68 @@ table.fc-scrollgrid.fc-scrollgrid-liquid th {
 }
 .calendar-modal {
   max-width: 42rem !important;
+}
+
+.fc-daygrid-dot-event .fc-event-title:hover {
+  overflow: visible;
+  cursor: pointer;
+  /* background-color: rgba(0, 0, 0, 0.1); */
+}
+.fc-daygrid-dot-event:hover {
+  background: #cacaca;
+  cursor: pointer;
+}
+.fc-event-main {
+  cursor: pointer;
+}
+button.fc-dayGridMonth-button.fc-button.fc-button-primary.fc-button-active {
+  display: none;
+}
+.fc .fc-daygrid-event-harness {
+  min-height: 22.6px;
+}
+.fc-daygrid-dot-event.clsEventEdit:hover {
+  position: absolute;
+}
+
+.custom-arrow:before {
+  content: "";
+  position: absolute;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: url(../img/DDArrow.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  right: 1.9rem;
+  top: 10px;
+  opacity: 0.7;
+}
+.custom-arrow {
+  position: relative;
+}
+.fc-h-event .fc-event-time {
+  overflow: visible !important;
+}
+.delete-warning {
+  position: relative;
+}
+.delete-warning:before {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  content: "";
+  background: url(../img/AlertWarning.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  top: -0.2rem;
+  left: 43%;
+}
+.delete-warning-dialog {
+  max-width: 20rem !important;
+}
+.form-control:disabled,
+.form-control:read-only {
+  background: #fff !important;
 }

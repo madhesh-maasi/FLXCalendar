@@ -54,14 +54,14 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     this.domElement.innerHTML = `
     <div class="calendar-section">
     <div class="btn-section text-end"> 
-    <button class="btn btn-theme btn-openmodal" data-bs-toggle="modal" data-bs-target="#calendarModal">Add</button>
+    <button class="btn btn-outline-theme btn-openmodal" data-bs-toggle="modal" data-bs-target="#calendarModal">Add</button>
     </div>
     <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
   <div class="modal-dialog calendar-modal">
-    <div class="modal-content">
+    <div class="modal-content">     
       <div class="modal-header">
-        <h5 class="modal-title" id="calendarModalLabel">Add / Update Event</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title fw-bold w-100 text-center" id="calendarModalLabel">Add / Update Event</h5>
+       <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
       </div>
       <div class="modal-body calendar-popup">
         <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control" id="eventTitle" aria-describedby=""></div></div>
@@ -88,25 +88,52 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         </select></div>
         </div>-->
 
-        <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div><div class="col-7"><select class="form-control" id="TypeOfEvent" aria-describedby=""><option>Select</option></select></div></div>
-        <div class="row align-items-center my-3"><div class="col-4">Color</div><div class="col-1">:</div><div class="col-7"><select class="form-control" id="EventColor" aria-describedby=""><option>Select</option></select></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div><div class="col-7 custom-arrow"><select class="form-control" id="TypeOfEvent" aria-describedby=""><option>Select</option></select></div></div>
         <div class="row align-items-center my-3"><div class="col-4">Description</div><div class="col-1">:</div><div class="col-7"><textarea class="form-control" id="eventDescritpion" aria-describedby=""></textarea></div></div>
-      </div> 
-      <div class="modal-footer"> 
+      </div>    
+      <div class="modal-footer justify-content-between"> 
+      <div class="btns-left">
+      <button type="button" class="btn btn-sm btn-danger" id="btnmodalDelete" style="display:none" data-bs-toggle="modal" data-bs-target="#deleteAlterModal">Delete</button>
+      </div>
+
+        <div class="btns-right d-flex">
         <div class="addScreen">
-        <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-sm btn-secondary" id="btnEventModalClose" data-bs-dismiss="modal">Close</button>
         <button type="button" class="btn btn-sm btn-theme" id="btnmodalSubmit">Submit</button>
         </div>
         <div class="viewScreen">
         <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
-        <button type="button" class="btn btn-sm btn-theme" id="btnmodalEdit" style="display:none">Update</button>
+        <button type="button" class="btn btn-sm btn-theme ms-2" id="btnmodalEdit" style="display:none">Update</button>
+        </div>
         </div>
       </div>
     </div>
   </div> 
-</div>  
+</div>   
       <div id="myCalendar"></div>  
-      </div>`;
+      </div>
+      
+      <div class="modal fade" id="deleteAlterModal" tabindex="-1" aria-labelledby="deleteAlterModalLabel" aria-hidden="true">
+  <div class="modal-dialog delete-warning-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        
+        <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+      </div>
+      <div class="modal-body delete-warning text-center pt-5">
+      <h5 class="modal-title" id="deleteAlterModalLabel">Confirmation</h5>
+        <p class="mb-0">Are you sure want to delete this Event?</p>
+      </div> 
+      <div class="modal-footer">
+        <button type="button" id="btnCancelDeleteEvent" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" class="btn btn-sm btn-danger" id="confirmDeleteEvent">Yes</button>
+      </div>
+    </div>
+  </div> 
+</div>
+      
+      
+      `;
       BindTypes();
 
     $("#Startdate").datetimepicker(
@@ -121,36 +148,36 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     );
 
       var htmlfortime="";
-      for(var i=0;i<24;i++)
-      {
-        if(i<10) 
-        htmlfortime+="<option value=0"+i+">0"+i+"</option>";
-        else
-        htmlfortime+="<option value="+i+">"+i+"</option>";
-      }
+      // for(var i=0;i<24;i++)
+      // {
+      //   if(i<10) 
+      //   htmlfortime+="<option value=0"+i+">0"+i+"</option>";
+      //   else
+      //   htmlfortime+="<option value="+i+">"+i+"</option>";
+      // }
 
-      $("#StartTime").html('');
-      $("#StartTime").html(htmlfortime);
+      // $("#StartTime").html('');
+      // $("#StartTime").html(htmlfortime);
 
-      $("#EndTime").html('');
-      $("#EndTime").html(htmlfortime);
+      // $("#EndTime").html('');
+      // $("#EndTime").html(htmlfortime);
 
-      var htmlforHour="";
-      for(var i=0;i<60;i++)
-      {
-        if(i<9) 
-        htmlforHour+="<option value=0"+i+">0"+i+"</option>";
-        else
-        htmlforHour+="<option value="+i+">"+i+"</option>";
+      // var htmlforHour="";
+      // for(var i=0;i<60;i++)
+      // {
+      //   if(i<9) 
+      //   htmlforHour+="<option value=0"+i+">0"+i+"</option>";
+      //   else
+      //   htmlforHour+="<option value="+i+">"+i+"</option>";
 
-        i=i+4;
-      }
+      //   i=i+4;
+      // }
 
-      $("#StartTimeHour").html('');
-      $("#StartTimeHour").html(htmlforHour);
+      // $("#StartTimeHour").html('');
+      // $("#StartTimeHour").html(htmlforHour);
 
-      $("#EndTimeHour").html('');
-      $("#EndTimeHour").html(htmlforHour);
+      // $("#EndTimeHour").html('');
+      // $("#EndTimeHour").html(htmlforHour);
 
 
 
@@ -158,24 +185,31 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       {
           insertevent();
       });
-
-      $(".btn-close,.btn-secondary").click(function()
+      
+      // $(".btn-close,.btn-secondary").click(function()
+      // {
+      //   $("#btnmodalSubmit").show();
+      //   $("#btnmodalEdit").hide();
+      //   $("#btnmodalDelete").hide();
+      // });
+      
+      $("#btnEventModalClose").click(function()
       {
         $("#btnmodalSubmit").show();
         $("#btnmodalEdit").hide();
+        $("#btnmodalDelete").hide();
       });
-
- 
-
       $(".btn-openmodal").click(function()
       {
+        $("#calendarModalLabel").text("Add Event")
         cleardata();
       });
 
       $(document).on("click",".clsEventEdit",function()
       {
           $(".btn-openmodal").trigger('click');
-
+          $("#calendarModalLabel").text("Edit Event");
+          $("#btnmodalDelete").show();
           $("#btnmodalEdit").show();
           $("#btnmodalSubmit").hide();
 
@@ -189,7 +223,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
                   filteredarray.push(arrCalendarEvents[i]);
                 }
           }
-
+       
         if(filteredarray[0].title)
         $("#eventTitle").val(filteredarray[0].title);
 
@@ -209,14 +243,24 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         $("#eventDescritpion").val(filteredarray[0].description);
 
       });
-
+ 
 
       $("#btnmodalEdit").click(function()
       {
         updateevent(EditID)
         
       });
-      
+      $("#btnmodalDelete").click(()=>{
+        (<HTMLElement>document.querySelector(".modal-dialog.calendar-modal")).style.display ="none"
+        // $(".modal-dialog.calendar-modal").css("display:none")
+      });
+      $("#btnCancelDeleteEvent").click(()=>{
+        (<HTMLElement>document.querySelector(".modal-dialog.calendar-modal")).style.display ="block"
+        // $(".modal-dialog.calendar-modal").css("display:block")
+      })
+      $( "#confirmDeleteEvent").click(()=>{
+        deleteEvent(EditID)
+      })
 
       getCalendarEvents();
       //BindCalendar("");
@@ -294,7 +338,7 @@ function BindCalendar(Calendardetails)
         cleardata();
         $("#Startdate,#Enddate").val(moment().format("YYYY-MM-DD"));
 }
-
+   
 async function getCalendarEvents()
 {
     await sp.web.lists.getByTitle("EventsList").items.select("*","TypeOfEvent/Title","TypeOfEvent/ID","Color/Title","Color/ID","Color/Color").expand("TypeOfEvent","Color").top(5000).get().then((items: any) => 
@@ -351,7 +395,7 @@ async function insertevent()
     EndDate:endtime,
     Description:$("#eventDescritpion").val(),
     TypeOfEventId:parseInt($("#TypeOfEvent").val()),
-    ColorId:parseInt($("#EventColor").val())
+    ColorId:parseInt($("#TypeOfEvent").val())
   };
     await sp.web.lists
       .getByTitle("EventsList")
@@ -359,7 +403,7 @@ async function insertevent()
       .then(async function (data) 
       {
           await getCalendarEvents();
-          $(".btn-close").trigger('click');
+          $("#btnEventModalClose").trigger('click');
         
         }).catch(function (error) 
       {
@@ -383,7 +427,7 @@ async function updateevent(itemid)
     EndDate:endtime,
     Description:$("#eventDescritpion").val(),
     TypeOfEventId:parseInt($("#TypeOfEvent").val()),
-    ColorId:parseInt($("#EventColor").val())
+    ColorId:parseInt($("#TypeOfEvent").val())
   };
     await sp.web.lists
       .getByTitle("EventsList")
@@ -391,14 +435,16 @@ async function updateevent(itemid)
       .then(async function (data) 
       {
           await getCalendarEvents();
-          $(".btn-close").trigger('click');
+          $("#btnEventModalClose").trigger('click');
         
         }).catch(function (error) 
       {
         alert("Error Occured");
       });
 }
-
+const deleteEvent = async(itemid)=>{
+  await sp.web.lists.getByTitle("EventsList").items.getById(itemid).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
+}
 function cleardata()
 {
   $("#eventTitle,#eventDescritpion").val("");
