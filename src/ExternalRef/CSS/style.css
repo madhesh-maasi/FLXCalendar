@@ -120,6 +120,8 @@ a.fc-daygrid-day-number {
 }
 button.fc-today-button.fc-button.fc-button-primary {
   margin-right: 5rem;
+  border-radius: 0;
+  margin-top: 1px;
 }
 button.btn.btn-outline-theme.btn-openmodal {
   position: relative;
@@ -204,4 +206,53 @@ button.fc-dayGridMonth-button.fc-button.fc-button-primary.fc-button-active {
 .form-control:disabled,
 .form-control:read-only {
   background: #fff !important;
+}
+  /* nishanth changes */
+  button.fc-next-button.fc-button.fc-button-primary, button.fc-prev-button.fc-button.fc-button-primary {
+    border-radius: 0;
+}
+.list-unstyled a.col-8 {
+  word-break: break-all;
+}
+.ajs-header {
+  padding-top: 5rem !important;
+  text-align: center;
+  padding-bottom: 0 !important;
+}
+.ajs-content {
+  text-align: center;
+}
+.alertfy-success {
+  position: relative;
+}
+.alertfy-success::before {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  content: "";
+  background: url(../img/AlertConfirm.png);
+  background-size: cover;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  top: -90px;
+  left: 42%;
+}
+.alertify .ajs-dialog {
+  max-width: 20rem !important;
+}
+.alertify .ajs-footer .ajs-buttons.ajs-primary {
+  text-align: center !important;
+  margin-bottom: 0.5rem;
+}  
+button.ajs-button.ajs-ok {
+  background: #011e41 !important;
+  color: #fff !important;
+  border: 0 !important;
+  border-radius: 0px !important;
+}
+.ajs-content {
+  padding-top: 6px !important;
+}
+.clsRadioSec label {
+  margin-right: 1rem;
 }
