@@ -176,7 +176,7 @@ button.fc-dayGridMonth-button.fc-button.fc-button-primary.fc-button-active {
   background-size: cover;
   background-repeat: no-repeat;
   right: 1.9rem;
-  top: 10px;
+  top: 10px;  
   opacity: 0.7;
 }
 .custom-arrow {
@@ -211,9 +211,9 @@ button.fc-dayGridMonth-button.fc-button.fc-button-primary.fc-button-active {
   button.fc-next-button.fc-button.fc-button-primary, button.fc-prev-button.fc-button.fc-button-primary {
     border-radius: 0;
 }
-.list-unstyled a.col-8 {
-  word-break: break-all;
-}
+ /* .list-unstyled a.col-8 {
+  word-break: break-all; 
+}  */
 .ajs-header {
   padding-top: 5rem !important;
   text-align: center;
@@ -253,6 +253,32 @@ button.ajs-button.ajs-ok {
 .ajs-content {
   padding-top: 6px !important;
 }
-.clsRadioSec label {
-  margin-right: 1rem;
+.addiconcalendar{
+display: inline-block;
+  width: 1.25rem;
+  height: 1.25rem;
+  background: url(../img/calendranaddicon.png);
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: absolute;
+  right: 1.5rem;
+ 
 }
+.editiconcalendar{
+  display: inline-block;
+    width: 1.25rem;
+    height: 1.25rem;
+    background: url(../img/EditPencilcalendar.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 1.5rem;
+   
+  }
+  .calendraniconpos{
+    position: relative;
+   top: -0.7rem;
+  }
+  
