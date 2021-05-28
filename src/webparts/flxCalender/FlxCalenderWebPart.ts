@@ -26,6 +26,8 @@ import "../../ExternalRef/CSS/datetimepicker.css";
 import "../../ExternalRef/js/bootstrap.js";
 import "../../ExternalRef/js/datetimepicker.js";
 import * as moment from  "moment";
+import "../../ExternalRef/css/alertify.min.css";
+var alertify: any = require("../../ExternalRef/js/alertify.min.js");  
  
 var arrCalendarEvents=[];
 var EditID="";
@@ -54,18 +56,18 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     this.domElement.innerHTML = `
     <div class="calendar-section">
     <div class="btn-section text-end"> 
-    <button class="btn btn-outline-theme btn-openmodal" data-bs-toggle="modal" data-bs-target="#calendarModal">Add</button>
+    <button class="btn btn-outline-theme btn-openmodal rounded-0" data-bs-toggle="modal" data-bs-target="#calendarModal">Add</button>
     </div>
     <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
   <div class="modal-dialog calendar-modal">
-    <div class="modal-content">     
+    <div class="modal-content rounded-0">     
       <div class="modal-header">
         <h5 class="modal-title fw-bold w-100 text-center" id="calendarModalLabel">Add / Update Event</h5>
        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
       </div>
       <div class="modal-body calendar-popup">
-        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control" id="eventTitle" aria-describedby=""></div></div>
-        <div class="row align-items-center my-3"><div class="col-4">Start Date</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control" id="Startdate" value="" aria-describedby=""></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="eventTitle" aria-describedby=""></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Start Date</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="Startdate" value="" aria-describedby=""></div></div>
         
         <!--<div class="row align-items-center my-3"><div class="col-4">Start Time</div><div class="col-1">:</div>
         <select class="form-control" id="StartTime">
@@ -76,34 +78,38 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         </select>
         </div>-->
 
-        <div class="row align-items-center my-3"><div class="col-4">End Date</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control" id="Enddate" value="" aria-describedby=""></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">End Date</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="Enddate" value="" aria-describedby=""></div></div>
         
         <!-- <div class="row align-items-center my-3"><div class="col-4">End Time</div><div class="col-1">:</div>
         <div class="col-7">
         <select class="form-control" id="EndTime">
         <option value="00">00</option>
-        </select>
-        <select class="form-control" id="EndTimeHour">
+        </select>  
+        <select class="form-control" id="EndTimeHour">  
         <option value="00">00</option>
         </select></div>
-        </div>-->
+        </div>-->     
 
-        <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div><div class="col-7 custom-arrow"><select class="form-control" id="TypeOfEvent" aria-describedby=""><option>Select</option></select></div></div>
-        <div class="row align-items-center my-3"><div class="col-4">Description</div><div class="col-1">:</div><div class="col-7"><textarea class="form-control" id="eventDescritpion" aria-describedby=""></textarea></div></div>
+        <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div>
+        <div class="col-5 custom-arrow"><select class="form-control rounded-0" id="TypeOfEvent" aria-describedby="">
+        <option>Select</option></select></div>  <div class="col-2 calendraniconpos"> 
+         <span class="editiconcalendar"  data-bs-toggle="modal" data-bs-target="#staticBackdropthree"></span> <span class="addiconcalendar" data-bs-toggle="modal" data-bs-target="#staticBackdropfour"></span> </div>  
+        </div>
+        <div class="row align-items-center my-3"><div class="col-4">Description</div><div class="col-1">:</div><div class="col-7"><textarea class="form-control rounded-0" id="eventDescritpion" aria-describedby=""></textarea></div></div>
       </div>    
       <div class="modal-footer justify-content-between"> 
       <div class="btns-left">
-      <button type="button" class="btn btn-sm btn-danger" id="btnmodalDelete" style="display:none" data-bs-toggle="modal" data-bs-target="#deleteAlterModal">Delete</button>
+      <button type="button" class="btn btn-sm btn-danger rounded-0" id="btnmodalDelete" style="display:none" data-bs-toggle="modal" data-bs-target="#deleteAlterModal">Delete</button>
       </div>
 
         <div class="btns-right d-flex">
         <div class="addScreen">
-        <button type="button" class="btn btn-sm btn-secondary" id="btnEventModalClose" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-sm btn-theme" id="btnmodalSubmit">Submit</button>
+        <button type="button" class="btn btn-sm btn-secondary rounded-0" id="btnEventModalClose" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnmodalSubmit">Submit</button>    
         </div>
         <div class="viewScreen">
-        <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
-        <button type="button" class="btn btn-sm btn-theme ms-2" id="btnmodalEdit" style="display:none">Update</button>
+        <!--<button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>-->
+        <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnmodalEdit" style="display:none">Update</button>
         </div>
         </div>
       </div>
@@ -115,7 +121,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       
       <div class="modal fade" id="deleteAlterModal" tabindex="-1" aria-labelledby="deleteAlterModalLabel" aria-hidden="true">
   <div class="modal-dialog delete-warning-dialog">
-    <div class="modal-content">
+    <div class="modal-content rounded-0">
       <div class="modal-header">
         
         <!--<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
@@ -125,15 +131,136 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         <p class="mb-0">Are you sure want to delete this Event?</p>
       </div> 
       <div class="modal-footer">
-        <button type="button" id="btnCancelDeleteEvent" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">No</button>
-        <button type="button" class="btn btn-sm btn-danger" id="confirmDeleteEvent">Yes</button>
+        <button type="button" id="btnCancelDeleteEvent" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
+        <button type="button" class="btn btn-sm btn-danger rounded-0" id="confirmDeleteEvent">Yes</button>
       </div>
     </div>
   </div> 
 </div>
+
+
+                                             <!---edit type of event -->
+                                               
+<div class="modal fade" id="staticBackdropthree" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog  ">
+    <div class="modal-content rounded-0">  
+      <div class="modal-header modal-tile-header">   
+        <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel"> Edit Type of Event </h5>
+     <!--   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+      </div>
+       
+      
+      <div class="modal-body  ">
+      <div class="row align-items-center my-3"><div class="col-4"> Type of Event</div><div class="col-1">:</div><div class="col-7">
+      <input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+      <div class="row align-items-center my-3"><div class="col-4">Color</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+
+      
+    </div>
+
+
+      
+    <div class="modal-footer  modal-tile-footer justify-content-between"> 
+    <div class="btns-left">
+    <button type="button" class="btn btn-sm btn-danger rounded-0" id=""  style="" data-bs-toggle="modal" data-bs-target="#LearningDeleteModal">Delete</button>
+    </div>
+
+      <div class="btns-right d-flex">
+      <div class="addScreen">
+      <button type="button" class="btn btn-sm btn-secondary rounded-0" id="" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-sm btn-theme rounded-0" id="" style="display: none;">Submit</button>
+      </div>
+      <div class="viewScreen">
+      <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
+      <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="" style="">Update</button>
+      </div>
+      </div>
+    </div>
+    </div>
+  </div>
+  
+</div>     
+
+             <!---Add type of event -->
+
+
+             <div class="modal fade" id="staticBackdropfour" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+             <div class="modal-dialog  ">
+               <div class="modal-content rounded-0">
+                 <div class="modal-header  ">
+                   <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel">Add Type of Event</h5>
+                   <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
+                 </div>
+                 
+                  
+                 
+                 <div class="modal-body">
+                 <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+                 <div class="row align-items-center my-3">
+                 <div class="col-4">Color</div><div class="col-1">:</div><div class="col-7">
+                 <input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+                
+                
+             
+           
+             
+                              
+                 
+               <div class="modal-footer modal-tile-footer justify-content-between"> 
+               <div class="btns-left">
+               <button type="button" class="btn btn-sm btn-danger rounded-0" id="" style="display: none;" data-bs-toggle="modal" data-bs-target="#deleteAlterModal">Delete</button>
+               </div>
+           
+                 <div class="btns-right d-flex">
+                 <div class="addScreen">
+                 <button type="button" class="btn btn-sm btn-secondary rounded-0" id="btnLearningAddClose" data-bs-dismiss="modal">Close</button>
+                 <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnmodalSubmit" style="display: none;">Submit</button>
+                 </div>
+                 <div class="viewScreen">
+                 <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
+                 <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnSubmitLearnFLXLearn" style="">Submit</button>
+                 </div>
+                 </div>
+               </div>
+               </div>
+             </div>
+           </div>  
+           </div>
+           
+           
+           
+           
+           
+           <!-- Delete Modal -->
+           
+               <div class="modal fade" id="" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
+             <div class="modal-dialog ">
+               <div class="modal-content rounded-0">
+                 <div class="modal-header">
+                    
+                   <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+                 </div>
+                 <div class="modal-body"> 
+                 <h5 class="modal-title" id="">Confirmation</h5>
+                 <p class="mb-0">Are you sure want to Delete?</p>
+                 </div>
+                 <div class="modal-footer">
+                   <button type="button" id="cancelLearningDelete" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
+                   <button type="button" id="btnDeleteLearn" class="btn btn-sm btn-danger rounded-0">Yes</button>
+                 </div>
+               </div>
+             </div>
+           </div>
+           <!-- Delete Modal -->
+          
+           
+               
+
+
+
       
       
-      `;
+      `; 
       BindTypes();
 
     $("#Startdate").datetimepicker(
@@ -242,12 +369,13 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         if(filteredarray[0].description)
         $("#eventDescritpion").val(filteredarray[0].description);
 
-      });
- 
+      });  
+   
 
       $("#btnmodalEdit").click(function()
       {
         updateevent(EditID)
+
         
       });
       $("#btnmodalDelete").click(()=>{
@@ -404,7 +532,7 @@ async function insertevent()
       {
           await getCalendarEvents();
           $("#btnEventModalClose").trigger('click');
-        
+          AlertMessage("<div class='alertfy-success'>Submitted successfully</div>");
         }).catch(function (error) 
       {
         alert("Error Occured");
@@ -428,7 +556,7 @@ async function updateevent(itemid)
     Description:$("#eventDescritpion").val(),
     TypeOfEventId:parseInt($("#TypeOfEvent").val()),
     ColorId:parseInt($("#TypeOfEvent").val())
-  };
+  };    
     await sp.web.lists
       .getByTitle("EventsList")
       .items.getById(itemid).update(requestdata)
@@ -436,6 +564,7 @@ async function updateevent(itemid)
       {
           await getCalendarEvents();
           $("#btnEventModalClose").trigger('click');
+          AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
         
         }).catch(function (error) 
       {
@@ -454,4 +583,24 @@ function cleardata()
   $("#EventColor").val("0");
   $("#TypeOfEvent").val("0");
   EditID="";
+}    
+
+
+function AlertMessage(strMewssageEN) {
+  alertify
+    .alert()
+    .setting({
+      label: "OK",
+      
+      message: strMewssageEN,
+
+      onok: function () {
+        window.location.href = "#";
+        location.reload();
+      },
+    })   
+    
+    .show()
+    .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div> ")
+    .set("closable", false);
 }
