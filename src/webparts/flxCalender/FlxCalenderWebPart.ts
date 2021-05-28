@@ -95,7 +95,6 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         <option>Select</option></select></div>  <div class="col-2 calendraniconpos"> 
          <span class="editiconcalendar"  data-bs-toggle="modal" data-bs-target="#staticBackdropthree"></span> <span class="addiconcalendar" data-bs-toggle="modal" data-bs-target="#staticBackdropfour"></span> </div>  
         </div>
-        <div class="row align-items-center my-3"><div class="col-4">Color</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
         <div class="row align-items-center my-3"><div class="col-4">Description</div><div class="col-1">:</div><div class="col-7"><textarea class="form-control rounded-0" id="eventDescritpion" aria-describedby=""></textarea></div></div>
       </div>    
       <div class="modal-footer justify-content-between"> 
@@ -154,6 +153,8 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       <div class="modal-body  ">
       <div class="row align-items-center my-3"><div class="col-4"> Type of Event</div><div class="col-1">:</div><div class="col-7">
       <input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+      <div class="row align-items-center my-3"><div class="col-4">Color</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+
       
     </div>
 
@@ -190,11 +191,14 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
                    <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel">Add Type of Event</h5>
                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
                  </div>
+                 
                   
                  
                  <div class="modal-body">
                  <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
-           
+                 <div class="row align-items-center my-3">
+                 <div class="col-4">Color</div><div class="col-1">:</div><div class="col-7">
+                 <input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
                 
                 
              
@@ -221,6 +225,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
                </div>
              </div>
            </div>  
+           </div>
            
            
            
