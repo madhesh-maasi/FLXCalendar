@@ -174,7 +174,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       </div>
       <div class="viewScreen">
       <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
-      <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnupdateevent" style="">Update</button>
+      <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnupdateevent" data-bs-dismiss="modal" style="">Update</button>
       </div>
       </div>
     </div>
@@ -220,7 +220,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
                  </div>
                  <div class="viewScreen">
                  <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
-                 <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnSubmitEvent" style="">Submit</button>
+                 <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnSubmitEvent" data-bs-dismiss="modal" style="">Submit</button>
                  </div>
                  </div>
                </div>
@@ -236,7 +236,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
            <!-- Delete Modal -->
            
                <div class="modal fade" id="EventtypeDeleteModal" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
-             <div class="modal-dialog ">
+             <div class="modal-dialog AnA-delete-warning-dialog">
                <div class="modal-content rounded-0">
                  <div class="modal-header">
                     
@@ -264,6 +264,15 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       
       `; 
       BindTypes();
+
+      $(document).on("change", "#TypeOfEvent", function(){
+        if ($("#TypeOfEvent").val() == 0) {
+          $(".editiconcalendar").hide();
+        } else {
+          $(".editiconcalendar").show();
+        }
+      });
+
       $("#btnDeleteevent").click(function(){
         DeleteEventType(TypeID);
       })
@@ -321,9 +330,17 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
           insertevent();
       });
 
-      $("#btnSubmitEvent").click(function()
+      $("#btnSubmitEvent").click(async function()
       {
-          inserteventtype();
+        if(mandatoryforaddaction())
+        {
+          await inserteventtype();
+        }
+        else
+        {
+          console.log("All fileds not filled");
+        }
+          //inserteventtype();
       });
       $("#btnCloseEvent").click(function()
       {
@@ -400,9 +417,17 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       {
         updateevent(EditID)  
       });
-      $("#btnupdateevent").click(function()
+      $("#btnupdateevent").click(async function()
       {
-        updateeventtype(TypeID);  
+        if(mandatoryforeditaction())
+        {
+          await updateeventtype(TypeID);
+        }
+        else
+        {
+          console.log("All fileds not filled");
+        }
+        //updateeventtype(TypeID);  
       });
 
       
@@ -609,6 +634,7 @@ function cleardata()
   $("#StartTime,#EndTime,#StartTimeHour,#EndTimeHour").val("00");
   $("#EventColor").val("0");
   $("#TypeOfEvent").val("0");
+  $(".editiconcalendar").hide();
   EditID="";
 }    
 
@@ -624,7 +650,7 @@ async function inserteventtype()
       .items.add(requestdata)
       .then(async function (data) 
       {
-          AlertMessage("<div class='alertfy-success'>Submitted successfully</div>");
+          Alert("<div class='alertfy-success'>Submitted successfully</div>");
         }).catch(function (error) 
       {
         alert("Error Occured");
@@ -667,7 +693,7 @@ async function updateeventtype(TypeID)
       .then(async function (data) 
       {
 
-          AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
+          Alert("<div class='alertfy-success'>Updated successfully</div>");
         
         }).catch(function (error) 
       {
@@ -675,9 +701,27 @@ async function updateeventtype(TypeID)
       });
 }
 function DeleteEventType(TypeID){
-  sp.web.lists.getByTitle("TypeOfEvent").items.getById((parseInt(TypeID))).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
+  sp.web.lists.getByTitle("TypeOfEvent").items.getById((parseInt(TypeID))).delete().then(()=>{location.reload();}).catch((error)=>{alert("Error Occured");})
   // AlertMessage("Record Deleted successfully");
 
+}
+function Alert(strMewssageEN) {
+  alertify
+    .alert()
+    .setting({
+      label: "OK",
+      
+      message: strMewssageEN,
+
+      onok: function () {
+        window.location.href = "#";
+        BindTypes();
+      },
+    })   
+    
+    .show()
+    .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div> ")
+    .set("closable", false);
 }
 function AlertMessage(strMewssageEN) {
   alertify
@@ -696,4 +740,41 @@ function AlertMessage(strMewssageEN) {
     .show()
     .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div> ")
     .set("closable", false);
+}
+function mandatoryforaddaction()
+{
+      var isAllvalueFilled=true;
+
+      if(!$("#addnewevent").val())
+      {
+        alertify.error("Please enter Type of Event");
+        isAllvalueFilled=false;
+        
+      }
+      else if(!$("#addnewcolor").val())
+      {
+        alertify.error("Please enter Color");
+        isAllvalueFilled=false;
+        
+      }
+      return isAllvalueFilled;
+}
+function mandatoryforeditaction()
+{
+      var isAllvalueFilled=true;
+
+     if(!$("#edittypeevent").val())
+      {
+        alertify.error("Please enter Type of Event");
+        isAllvalueFilled=false;
+        
+      }
+      else if(!$("#edittypecolor").val())
+      {
+        alertify.error("Please enter Color");
+        isAllvalueFilled=false;
+        
+      }
+
+      return isAllvalueFilled;
 }

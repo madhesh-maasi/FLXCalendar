@@ -281,4 +281,18 @@ display: inline-block;
     position: relative;
    top: -0.7rem;
   }
-  
+  .AnA-delete-warning-dialog {
+    max-width: 20rem!important;
+}
+.AnA-delete-warning:before {
+  position: absolute;
+  width: 3rem;
+  height: 3rem;
+  content: "";
+  background: url(../img/AlertWarning.png);
+  background-size: cover;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  top: -0.2rem;
+  left: 43%;
+}
