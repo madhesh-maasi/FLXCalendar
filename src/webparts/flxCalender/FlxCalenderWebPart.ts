@@ -31,7 +31,9 @@ var alertify: any = require("../../ExternalRef/js/alertify.min.js");
  
 var arrCalendarEvents=[];
 var EditID="";
+var TypeID="";
 let listUrl="";
+var alleventtype=[];
 export interface IFlxCalenderWebPartProps {
   description: string;
 }
@@ -142,7 +144,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
                                              <!---edit type of event -->
                                                
 <div class="modal fade" id="staticBackdropthree" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog  ">
+  <div class="modal-dialog  event-modal-dialog">
     <div class="modal-content rounded-0">  
       <div class="modal-header modal-tile-header">   
         <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel"> Edit Type of Event </h5>
@@ -152,8 +154,8 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       
       <div class="modal-body  ">
       <div class="row align-items-center my-3"><div class="col-4"> Type of Event</div><div class="col-1">:</div><div class="col-7">
-      <input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
-      <div class="row align-items-center my-3"><div class="col-4">Color</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+      <input type="text" class="form-control rounded-0" id="edittypeevent"></div></div>
+      <div class="row align-items-center my-3"><div class="col-4">Color</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="edittypecolor"></div></div>
 
       
     </div>
@@ -162,17 +164,17 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       
     <div class="modal-footer  modal-tile-footer justify-content-between"> 
     <div class="btns-left">
-    <button type="button" class="btn btn-sm btn-danger rounded-0" id=""  style="" data-bs-toggle="modal" data-bs-target="#LearningDeleteModal">Delete</button>
+    <button type="button" class="btn btn-sm btn-danger rounded-0" id="eventtypetDeleteModal"  style="" data-bs-toggle="modal" data-bs-target="#EventtypeDeleteModal">Delete</button>
     </div>
 
       <div class="btns-right d-flex">
       <div class="addScreen">
-      <button type="button" class="btn btn-sm btn-secondary rounded-0" id="" data-bs-dismiss="modal">Close</button>
+      <button type="button" class="btn btn-sm btn-secondary rounded-0" id="btnECloseevent" data-bs-dismiss="modal">Close</button>
       <button type="button" class="btn btn-sm btn-theme rounded-0" id="" style="display: none;">Submit</button>
       </div>
       <div class="viewScreen">
       <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
-      <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="" style="">Update</button>
+      <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnupdateevent" style="">Update</button>
       </div>
       </div>
     </div>
@@ -185,7 +187,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 
 
              <div class="modal fade" id="staticBackdropfour" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-             <div class="modal-dialog  ">
+             <div class="modal-dialog  event-modal-dialog">
                <div class="modal-content rounded-0">
                  <div class="modal-header  ">
                    <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel">Add Type of Event</h5>
@@ -195,10 +197,10 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
                   
                  
                  <div class="modal-body">
-                 <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+                 <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="addnewevent" aria-describedby=""></div></div>
                  <div class="row align-items-center my-3">
                  <div class="col-4">Color</div><div class="col-1">:</div><div class="col-7">
-                 <input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+                 <input type="text" class="form-control rounded-0" id="addnewcolor" aria-describedby=""></div></div>
                 
                 
              
@@ -213,12 +215,12 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
            
                  <div class="btns-right d-flex">
                  <div class="addScreen">
-                 <button type="button" class="btn btn-sm btn-secondary rounded-0" id="btnLearningAddClose" data-bs-dismiss="modal">Close</button>
+                 <button type="button" class="btn btn-sm btn-secondary rounded-0" id="btnCloseEvent" data-bs-dismiss="modal">Close</button>
                  <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnmodalSubmit" style="display: none;">Submit</button>
                  </div>
                  <div class="viewScreen">
                  <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
-                 <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnSubmitLearnFLXLearn" style="">Submit</button>
+                 <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnSubmitEvent" style="">Submit</button>
                  </div>
                  </div>
                </div>
@@ -233,7 +235,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
            
            <!-- Delete Modal -->
            
-               <div class="modal fade" id="" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
+               <div class="modal fade" id="EventtypeDeleteModal" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
              <div class="modal-dialog ">
                <div class="modal-content rounded-0">
                  <div class="modal-header">
@@ -245,8 +247,8 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
                  <p class="mb-0">Are you sure want to Delete?</p>
                  </div>
                  <div class="modal-footer">
-                   <button type="button" id="cancelLearningDelete" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
-                   <button type="button" id="btnDeleteLearn" class="btn btn-sm btn-danger rounded-0">Yes</button>
+                   <button type="button" id="canceleventtypeDelete" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
+                   <button type="button" id="btnDeleteevent" class="btn btn-sm btn-danger rounded-0">Yes</button>
                  </div>
                </div>
              </div>
@@ -262,6 +264,9 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       
       `; 
       BindTypes();
+      $("#btnDeleteevent").click(function(){
+        DeleteEventType(TypeID);
+      })
 
     $("#Startdate").datetimepicker(
       {
@@ -305,13 +310,32 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 
       // $("#EndTimeHour").html('');
       // $("#EndTimeHour").html(htmlforHour);
-
+      $(".editiconcalendar").click(function()
+      {
+        geteventtype();
+      });
 
 
       $("#btnmodalSubmit").click(function()
       {
           insertevent();
       });
+
+      $("#btnSubmitEvent").click(function()
+      {
+          inserteventtype();
+      });
+      $("#btnCloseEvent").click(function()
+      {
+        $("#addnewevent").val("");
+        $("#addnewcolor").val("");
+      });
+      $("#btnECloseEvent").click(function()
+      {
+        $("#edittypeevent").val("");
+        $("#edittypecolor").val(""); 
+      });
+      
       
       // $(".btn-close,.btn-secondary").click(function()
       // {
@@ -374,10 +398,14 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 
       $("#btnmodalEdit").click(function()
       {
-        updateevent(EditID)
-
-        
+        updateevent(EditID)  
       });
+      $("#btnupdateevent").click(function()
+      {
+        updateeventtype(TypeID);  
+      });
+
+      
       $("#btnmodalDelete").click(()=>{
         (<HTMLElement>document.querySelector(".modal-dialog.calendar-modal")).style.display ="none"
         // $(".modal-dialog.calendar-modal").css("display:none")
@@ -389,7 +417,6 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $( "#confirmDeleteEvent").click(()=>{
         deleteEvent(EditID)
       })
-
       getCalendarEvents();
       //BindCalendar("");
        
@@ -585,7 +612,73 @@ function cleardata()
   EditID="";
 }    
 
+async function inserteventtype()
+{
+  
+  var requestdata = {
+    Title:$("#addnewevent").val(),
+    Color:$("#addnewcolor").val(),
+  };
+    await sp.web.lists
+      .getByTitle("TypeOfEvent")
+      .items.add(requestdata)
+      .then(async function (data) 
+      {
+          AlertMessage("<div class='alertfy-success'>Submitted successfully</div>");
+        }).catch(function (error) 
+      {
+        alert("Error Occured");
+      });
+}
 
+
+async function geteventtype()
+{
+  var id = $("#TypeOfEvent").val();
+  await sp.web.lists.getByTitle("TypeOfEvent").items.select("*").filter("ID eq '" + id + "'").get().then(async (item)=>
+    {
+      console.log("item");
+      console.log(item);
+      if(item.length>0){
+  TypeID=item[0].ID;
+  $("#edittypeevent").val(item[0].Title);
+  $("#edittypecolor").val(item[0].Color); 
+}
+else{
+  $("#edittypeevent").val("");
+  $("#edittypecolor").val("");
+}
+}).catch((error)=>
+{
+  console.log(error);
+});
+}
+
+async function updateeventtype(TypeID)
+{
+  
+  var requestdata = {
+    Title:$("#edittypeevent").val(),
+    Color:$("#edittypecolor").val(),
+  };   
+    await sp.web.lists
+      .getByTitle("TypeOfEvent")
+      .items.getById(TypeID).update(requestdata)
+      .then(async function (data) 
+      {
+
+          AlertMessage("<div class='alertfy-success'>Updated successfully</div>");
+        
+        }).catch(function (error) 
+      {
+        alert("Error Occured");
+      });
+}
+function DeleteEventType(TypeID){
+  sp.web.lists.getByTitle("TypeOfEvent").items.getById((parseInt(TypeID))).delete().then(()=>{location.reload()}).catch((error)=>{alert("Error Occured");})
+  // AlertMessage("Record Deleted successfully");
+
+}
 function AlertMessage(strMewssageEN) {
   alertify
     .alert()
