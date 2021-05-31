@@ -54,11 +54,40 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     var siteindex = listUrl.toLocaleLowerCase().indexOf("sites");
     listUrl = listUrl.substr(siteindex - 1) + "/Lists/";
     this.domElement.innerHTML = `
-    <div class="calendar-section">
-    <div class="btn-section text-end"> 
+
+    
+       
+<div class="d-flex">
+<div class="cal-sec-eventtypes my-3"> 
+<div class="box">
+<div class="tile-head-calendar ">
+    <h6 class="text-center p-2 border-bottom">Event Types</h6>  
+    </div>  
+<div class="list-group rounded-0 event-types-list">  
+       
+ 
+<a href="#" class="list-group-item list-group-item-action list-group-item-primary text-center">A simple </a>
+<a href="#" class="list-group-item list-group-item-action list-group-item-secondary text-center">A </a>
+<a href="#" class="list-group-item list-group-item-action list-group-item-success text-center text-center">A simple s</a>
+<a href="#" class="list-group-item list-group-item-action list-group-item-danger text-center">A simple </a>
+<a href="#" class="list-group-item list-group-item-action list-group-item-warning text-center">A simple </a>
+</div>   
+<a href="#" class="list-group-item list-group-item-action list-group-item-dark customizecalendar text-center">Customize <span class="editiconcalendar"  data-bs-toggle="modal" data-bs-target="#staticBackdropthree"></span>  </a>
+ 
+</div>   
+</div>  
+<div class="calendar-section">
+    <div class="btn-section text-end">  
     <button class="btn btn-outline-theme btn-openmodal rounded-0" data-bs-toggle="modal" data-bs-target="#calendarModal">Add</button>
     </div>
-    <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
+      <div id="myCalendar"></div>  
+      </div>
+      </div>
+      
+
+
+
+      <div class="modal fade" id="calendarModal" tabindex="-1" aria-labelledby="calendarModalLabel" aria-hidden="true">
   <div class="modal-dialog calendar-modal">
     <div class="modal-content rounded-0">     
       <div class="modal-header">
@@ -91,10 +120,8 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         </div>-->     
 
         <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div>
-        <div class="col-5 custom-arrow"><select class="form-control rounded-0" id="TypeOfEvent" aria-describedby="">
-        <option>Select</option></select></div>  <div class="col-2 calendraniconpos"> 
-         <span class="editiconcalendar"  data-bs-toggle="modal" data-bs-target="#staticBackdropthree"></span> <span class="addiconcalendar" data-bs-toggle="modal" data-bs-target="#staticBackdropfour"></span> </div>  
-        </div>
+        <div class="col-7 custom-arrow"><select class="form-control rounded-0" id="TypeOfEvent" aria-describedby="">
+        <option>Select</option></select></div>  
         <div class="row align-items-center my-3"><div class="col-4">Description</div><div class="col-1">:</div><div class="col-7"><textarea class="form-control rounded-0" id="eventDescritpion" aria-describedby=""></textarea></div></div>
       </div>    
       <div class="modal-footer justify-content-between"> 
@@ -115,9 +142,8 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       </div>
     </div>
   </div> 
-</div>   
-      <div id="myCalendar"></div>  
-      </div>
+</div>  
+</div>
       
       <div class="modal fade" id="deleteAlterModal" tabindex="-1" aria-labelledby="deleteAlterModalLabel" aria-hidden="true">
   <div class="modal-dialog delete-warning-dialog">
@@ -138,102 +164,81 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   </div> 
 </div>
 
-
-                                             <!---edit type of event -->
-                                               
-<div class="modal fade" id="staticBackdropthree" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-  <div class="modal-dialog  ">
+<!-- edit type of event -->
+           
+           <div class="modal fade" id="staticBackdropthree" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog cal-modal-dialog ">  
     <div class="modal-content rounded-0">  
       <div class="modal-header modal-tile-header">   
-        <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel"> Edit Type of Event </h5>
+        <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel"> Add / Edit Event Type</h5>
      <!--   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
       </div>
        
       
-      <div class="modal-body  ">
-      <div class="row align-items-center my-3"><div class="col-4"> Type of Event</div><div class="col-1">:</div><div class="col-7">
-      <input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
-      <div class="row align-items-center my-3"><div class="col-4">Color</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
+      <div class="modal-body  modalbody-CALENDAR">
+     
+      <div class="row my-2 justify-content-center"><div class="col-1"></div><div class="col-2 text-center fw-bolder">Title</div>
+      <div class="col-7 text-center fw-bolder">Color</div></div>
+
+      <div class="row align-items-start my-3 mx-2"><div class="col-1">1</div><div class="col-4">
+      <input type="text" class="form-control  rounded-0" id="" aria-describedby="" ></div>
+      <div class="col-5">
+      <input type="text" class="form-control  rounded-0" id="" aria-describedby="" ></div>
+     <div class="col-2 editicontypes">
+     <span class="editiconeventtypes"></span>  
+     <span class="deleteiconeventtypes"></span> 
+     <span class="tickiconeventtypes"></span> </div>  
+    </div>
+  
+    <div class="d-flex justify-content-end addtypescal">    
+    <span class= "addiconeidttypes"> </span>
+    </div> 
+    <div class="row my-2 justify-content-center"><div class="col-1"></div><div class="col-2 text-center fw-bolder">Title</div>
+      <div class="col-7 text-center fw-bolder">Color</div></div>
+
+      <div class="row align-items-start my-3 mx-2"><div class="col-1">1</div><div class="col-4">
+      <input type="text" class="form-control  rounded-0" id="" aria-describedby="" ></div>
+      <div class="col-5">
+      <input type="text" class="form-control  rounded-0" id="" aria-describedby="" ></div>
+      
+       
+    </div>
+     
+
 
       
-    </div>
-
-
-      
-    <div class="modal-footer  modal-tile-footer justify-content-between"> 
-    <div class="btns-left">
-    <button type="button" class="btn btn-sm btn-danger rounded-0" id=""  style="" data-bs-toggle="modal" data-bs-target="#LearningDeleteModal">Delete</button>
-    </div>
-
-      <div class="btns-right d-flex">
-      <div class="addScreen">
-      <button type="button" class="btn btn-sm btn-secondary rounded-0" id="" data-bs-dismiss="modal">Close</button>
-      <button type="button" class="btn btn-sm btn-theme rounded-0" id="" style="display: none;">Submit</button>
+    <div class="modal-footer justify-content-between"> 
+      <div class="btns-left">
+      <button type="button" class="btn btn-sm btn-danger rounded-0" id="btnmodalDelete" style="display:none" data-bs-toggle="modal" data-bs-target="#deleteAlterModal">Delete</button>
       </div>
-      <div class="viewScreen">
-      <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
-      <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="" style="">Update</button>
+
+        <div class="btns-right d-flex">
+        <div class="addScreen">
+        <button type="button" class="btn btn-sm btn-secondary rounded-0" id="btnEventModalClose" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnmodalSubmit">Save</button>    
+        </div>
+        <div class="viewScreen">
+        <!--<button type="button" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">Close</button>-->
+        <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnmodalEdit" style="display:none">Update</button>
+        </div>
+        </div>
       </div>
-      </div>
-    </div>
     </div>
   </div>
-  
-</div>     
-
-             <!---Add type of event -->
+  </div>
+</div>  
 
 
-             <div class="modal fade" id="staticBackdropfour" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-             <div class="modal-dialog  ">
-               <div class="modal-content rounded-0">
-                 <div class="modal-header  ">
-                   <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel">Add Type of Event</h5>
-                   <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-                 </div>
-                 
-                  
-                 
-                 <div class="modal-body">
-                 <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
-                 <div class="row align-items-center my-3">
-                 <div class="col-4">Color</div><div class="col-1">:</div><div class="col-7">
-                 <input type="text" class="form-control rounded-0" id="" aria-describedby=""></div></div>
-                
-                
-             
-           
-             
-                              
-                 
-               <div class="modal-footer modal-tile-footer justify-content-between"> 
-               <div class="btns-left">
-               <button type="button" class="btn btn-sm btn-danger rounded-0" id="" style="display: none;" data-bs-toggle="modal" data-bs-target="#deleteAlterModal">Delete</button>
-               </div>
-           
-                 <div class="btns-right d-flex">
-                 <div class="addScreen">
-                 <button type="button" class="btn btn-sm btn-secondary rounded-0" id="btnLearningAddClose" data-bs-dismiss="modal">Close</button>
-                 <button type="button" class="btn btn-sm btn-theme rounded-0" id="btnmodalSubmit" style="display: none;">Submit</button>
-                 </div>
-                 <div class="viewScreen">
-                 <!--<button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Close</button>-->
-                 <button type="button" class="btn btn-sm btn-theme ms-2 rounded-0" id="btnSubmitLearnFLXLearn" style="">Submit</button>
-                 </div>
-                 </div>
-               </div>
-               </div>
-             </div>
-           </div>  
-           </div>
+
+
+
+
            
            
            
+          <!-- Delete Modal -->
            
-           
-           <!-- Delete Modal -->
-           
-               <div class="modal fade" id="" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
+                <div class="modal fade" id="" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
              <div class="modal-dialog ">
                <div class="modal-content rounded-0">
                  <div class="modal-header">
@@ -250,17 +255,18 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
                  </div>
                </div>
              </div>
-           </div>
-           <!-- Delete Modal -->
+           </div> 
+           <!-- Delete Modal -->   
           
            
                
 
 
 
-      
+          
       
       `; 
+      
       BindTypes();
 
     $("#Startdate").datetimepicker(
