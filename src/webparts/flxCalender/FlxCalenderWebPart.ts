@@ -744,6 +744,7 @@ const BindTypes = async()=>{
       message: strMewssageEN,
       onok: function () {
         window.location.href = "#";
+        BindTypes();
         geteventtype();
       },
     })   
