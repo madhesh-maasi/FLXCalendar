@@ -27,7 +27,8 @@
     "jquery": "^3.6.0",
     "jquery-datetimepicker": "^2.5.21",
     "moment": "^2.29.1",
-    "npm-install": "^1.7.4"
+    "npm-install": "^1.7.4",
+    "spectrum-colorpicker2": "^2.0.8"
   },
   "devDependencies": {
     "@microsoft/rush-stack-compiler-3.3": "0.3.5",
