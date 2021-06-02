@@ -61,7 +61,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 <div class="tile-head-calendar p-1  ">  
     <h6 class="text-center mt-2 my-1">Event Types</h6>          
     </div>  
-    <div class="boxcal">
+    <div class="boxcal">                                 
 <ul class="list-unstyled ps-2 pe-2" id="bindeventtype">  
 
 <!--<li class="py-2  d-flex row eventborder">         
@@ -74,7 +74,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         
 <div class="calcustomize text-center">
 <a href="#" class=" customizecalendar  remove_under"  data-bs-toggle="modal" data-bs-target="#staticBackdropthree">
-+ Customize   </a>
+ Customize   </a>
 </div>
  
 </div>   
