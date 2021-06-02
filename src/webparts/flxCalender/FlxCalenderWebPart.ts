@@ -57,7 +57,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     listUrl = listUrl.substr(siteindex - 1) + "/Lists/";
     this.domElement.innerHTML = `
     <div class="d-flex">
-<div class="cal-sec-eventtypes my-3"> 
+<div class="cal-sec-eventtypes my-5"> 
 <div class="tile-head-calendar p-1  ">  
     <h6 class="text-center mt-2 my-1">Event Types</h6>          
     </div>  
@@ -72,7 +72,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 </li> -->
 </ul>      
         
-<div class="calcustomize mx-3">
+<div class="calcustomize text-center">
 <a href="#" class=" customizecalendar  remove_under"  data-bs-toggle="modal" data-bs-target="#staticBackdropthree">
 + Customize   </a>
 </div>
@@ -121,7 +121,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         <div class="col-7 custom-arrow"><select class="form-control rounded-0" id="TypeOfEvent" aria-describedby="">
         <option>Select</option></select></div> </div> 
         <div class="row align-items-center my-3"><div class="col-4">Description</div><div class="col-1">:</div><div class="col-7">
-        <textarea class="form-control rounded-0" id="eventDescritpion" aria-describedby=""></textarea>
+        <textarea class="form-control rounded-0 addDescritpion" id="eventDescritpion" aria-describedby=""></textarea>
         </div></div> 
       </div>    
       <div class="modal-footer justify-content-between"> 
