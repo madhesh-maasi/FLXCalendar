@@ -37,6 +37,7 @@ var arrCalendarEvents = [];
 var EditID = "";
 let listUrl = "";
 var alleventitem = [];
+var dltid = "";
 export interface IFlxCalenderWebPartProps {
   description: string;
 }
@@ -63,12 +64,12 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     <div class="boxcal">
 <ul class="list-unstyled ps-2 pe-2" id="bindeventtype">  
 
-<li class="py-2  d-flex row eventborder">         
+<!--<li class="py-2  d-flex row eventborder">         
 <div class="col-2 "><span class= "eventtypescircle"><span></div><div class="col-10">Type 1</div>
 </li> 
 <li class="py-2  d-flex row eventborder">     
 <div class="col-2 "><span class= "eventtypescircle"><span></div><div class="col-10">Type 1</div>
-</li> 
+</li> -->
 </ul>      
         
 <div class="calcustomize mx-3">
@@ -211,14 +212,14 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
            
           <!-- Delete Modal -->
            
-                <div class="modal fade" id="" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
-             <div class="modal-dialog ">
+                <div class="modal fade" id="dealsAnADeleteModal" tabindex="-1" aria-labelledby="AnADeleteModalLabel" aria-hidden="true">
+             <div class="modal-dialog delete-warning-dialog">
                <div class="modal-content rounded-0">
                  <div class="modal-header">
                     
                    <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
                  </div>
-                 <div class="modal-body"> 
+                 <div class="modal-body delete-warning text-center pt-5"> 
                  <h5 class="modal-title" id="">Confirmation</h5>
                  <p class="mb-0">Are you sure want to Delete?</p>
                  </div>
@@ -252,11 +253,20 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       await updateeventtype(editdata);
     });
     $(document).on("click", ".deleteiconeventtypes", async function () {
-      var editdata = "";
-      editdata = $(this).attr("data-id");
-      console.log(editdata);
-
-      await DeleteEventType(editdata);
+      dltid = "";
+      dltid = $(this).attr("data-id");
+      console.log(dltid);
+      
+      $(".cal-modal-dialog").hide();
+      //
+    });
+    $(document).on("click", "#cancelEventDelete", async function () {
+      
+      $(".cal-modal-dialog").show();
+      
+    });
+    $(document).on("click", "#btnDeleteEvent", async function () { 
+      await DeleteEventType(dltid);
     });
     // $(".editiconeventtypes").click(function()
     // {
@@ -607,7 +617,7 @@ async function geteventtype() {
     .get()
     .then(async (item) => {
       var htmlforeventtype = "";
-      //  var htmlforbindeventtype="";
+      var htmlforbindeventtype="";
       var count = 0;
       alleventitem = item;
       console.log("item");
@@ -632,7 +642,7 @@ async function geteventtype() {
             }"></div>
        <div class="col-2 editicontypes">
        <span class="editiconeventtypes pencil${i}" data-id="${i}"></span>  
-       <span class="deleteiconeventtypes dlt${i}" data-id="${i}"></span> 
+       <span class="deleteiconeventtypes dlt${i}" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal" data-id="${i}"></span> 
        <span class="tickiconeventtypes tick${i}" data-id="${i}"></span>
        <span class= "addiconeidttypes"> </span> </div></div>`;
           } else {
@@ -652,16 +662,18 @@ async function geteventtype() {
             }"></div>
        <div class="col-2 editicontypes">
        <span class="editiconeventtypes pencil${i}" data-id="${i}"></span>  
-       <span class="deleteiconeventtypes dlt${i}" data-id="${i}"></span> 
+       <span class="deleteiconeventtypes dlt${i}" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal" data-id="${i}"></span> 
        <span class="tickiconeventtypes tick${i}" data-id="${i}"></span> </div></div>`;
           }
-
-          // htmlforbindeventtype+=`<div style="background-color:${item[i].Color}"></div><a href="#" class="list-group-item list-group-item-action text-center" style="background-color:${item[i].Color}">${item[i].Title}</a>`;
+          htmlforbindeventtype+=`<li class="py-2  d-flex row eventborder">         
+          <div class="col-2 "><span class= "eventtypescircle" style="background-color:${item[i].Color}"><span></div><div class="col-10">${item[i].Title}</div>
+          </li>`;
+           //htmlforbindeventtype+=`<div style="background-color:${item[i].Color}"></div><a href="#" class="list-group-item list-group-item-action text-center" style="background-color:${item[i].Color}">${item[i].Title}</a>`;
         }
         $("#Vieweventtype").html("");
         $("#Vieweventtype").html(htmlforeventtype);
-        //  $("#bindeventtype").html("");
-        //  $("#bindeventtype").html(htmlforbindeventtype);
+         $("#bindeventtype").html("");
+         $("#bindeventtype").html(htmlforbindeventtype);
         $(".tickiconeventtypes").hide();
         $(".titleevent").hide();
         $(".titlecolor").hide();
