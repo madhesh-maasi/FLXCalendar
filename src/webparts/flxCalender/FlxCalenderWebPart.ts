@@ -185,6 +185,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       <input type="text" class="form-control  rounded-0" id="addnewcolor" autocomplete="off" aria-describedby="" ></div>
       <div class= "col-2">
       <span class="tickiconaddcal" id ="btnEventSubmit"> </span>
+      <span class="canceliconaddcal" id ="btnEventcancel"> </span>
       </div>  
            
            
@@ -225,7 +226,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
                  </div>
                  <div class="modal-footer">
                    <button type="button" id="cancelEventDelete" class="btn btn-sm btn-secondary rounded-0" data-bs-dismiss="modal">No</button>
-                   <button type="button" id="btnDeleteEvent" class="btn btn-sm btn-danger rounded-0">Yes</button>
+                   <button type="button" id="btnDeleteEvent" class="btn btn-sm btn-danger rounded-0" data-bs-dismiss="modal">Yes</button>
                  </div>
                </div>
              </div>
@@ -242,8 +243,20 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $(".pencil" + editdata).hide();
       $(".dlt" + editdata).hide();
       $(".tick" + editdata).show();
+      $(".cancel" + editdata).show();
       $(".label" + editdata).hide();
       $(".view" + editdata).show();
+    });
+    $(document).on("click", ".canceliconeventtypes", async function () {
+      var editdata = "";
+      editdata = $(this).attr("data-id");
+      console.log(editdata);
+      $(".pencil" + editdata).show();
+      $(".dlt" + editdata).show();
+      $(".tick" + editdata).hide();
+      $(".cancel" + editdata).hide();
+      $(".label" + editdata).show();
+      $(".view" + editdata).hide();
     });
     $(document).on("click", ".tickiconeventtypes", async function () {
       var editdata = "";
@@ -257,7 +270,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       dltid = $(this).attr("data-id");
       console.log(dltid);
       
-      $(".cal-modal-dialog").hide();
+      $(".cal-modal-dialog").show();
       //
     });
     $(document).on("click", "#cancelEventDelete", async function () {
@@ -268,20 +281,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     $(document).on("click", "#btnDeleteEvent", async function () { 
       await DeleteEventType(dltid);
     });
-    // $(".editiconeventtypes").click(function()
-    // {
-    //   $(".editiconeventtypes").hide();
-    //   $(".deleteiconeventtypes").hide();
-    //   $(".tickiconeventtypes").show();
-    // });
-    // $(".tickiconeventtypes").click(function()
-    // {
-    //   $(".tickiconeventtypes").hide();
-    //   $(".editiconeventtypes").show();
-    //   $(".deleteiconeventtypes").show();
-
-    // });
-
+    
     $("#btnEventClose").click(function () {
       BindTypes();
       geteventtype();
@@ -644,6 +644,7 @@ async function geteventtype() {
        <span class="editiconeventtypes pencil${i}" data-id="${i}"></span>  
        <span class="deleteiconeventtypes dlt${i}" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal" data-id="${i}"></span> 
        <span class="tickiconeventtypes tick${i}" data-id="${i}"></span>
+       <span class="canceliconeventtypes cancel${i}" data-id="${i}"></span>
        <span class= "addiconeidttypes"> </span> </div></div>`;
           } else {
             htmlforeventtype += `<div class="row align-items-start my-3 mx-2"><div class="col-1">${
@@ -663,7 +664,8 @@ async function geteventtype() {
        <div class="col-2 editicontypes">
        <span class="editiconeventtypes pencil${i}" data-id="${i}"></span>  
        <span class="deleteiconeventtypes dlt${i}" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal" data-id="${i}"></span> 
-       <span class="tickiconeventtypes tick${i}" data-id="${i}"></span> </div></div>`;
+       <span class="tickiconeventtypes tick${i}" data-id="${i}"></span>
+       <span class="canceliconeventtypes cancel${i}" data-id="${i}"></span> </div></div>`;
           }
           htmlforbindeventtype+=`<li class="py-2  d-flex row eventborder">         
           <div class="col-2 "><span class= "eventtypescircle" style="background-color:${item[i].Color}"><span></div><div class="col-10">${item[i].Title}</div>
@@ -675,13 +677,16 @@ async function geteventtype() {
          $("#bindeventtype").html("");
          $("#bindeventtype").html(htmlforbindeventtype);
         $(".tickiconeventtypes").hide();
+        $(".canceliconeventtypes").hide();
         $(".titleevent").hide();
         $(".titlecolor").hide();
 
         $(".addiconeidttypes").click(function () {
           $(".addeventscreen").show();
         });
-        $(".editiconcalendar").click(function () {
+        $(".canceliconaddcal").click(function () {
+          $("#addnewevent").val("");
+          $("#addnewcolor").val("");
           $(".addeventscreen").hide();
         });
       }
@@ -736,7 +741,8 @@ function DeleteEventType(TypeID) {
     .items.getById(parseInt(Id))
     .delete()
     .then(() => {
-      location.reload();
+      BindTypes();
+      geteventtype();
     })
     .catch((error) => {
       alert("Error Occured");
