@@ -11,7 +11,7 @@ import { SPComponentLoader } from "@microsoft/sp-loader";
 import styles from "./FlxCalenderWebPart.module.scss";
 import * as strings from "FlxCalenderWebPartStrings";
 import * as $ from "jquery";
-import { sp } from "@pnp/pnpjs";
+import { sp } from "@pnp/pnpjs";  
 import "fullcalendar";
 import { Calendar } from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -62,7 +62,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     <h6 class="text-center mt-2 my-1">Event Types</h6>          
     </div>  
     <div class="boxcal">                                 
-<ul class="list-unstyled ps-2 pe-2" id="bindeventtype">  
+<ul class="list-unstyled ps-2 pe-2" id="bindeventtype">    
 
 <!--<li class="py-2  d-flex row eventborder">         
 <div class="col-2 "><span class= "eventtypescircle"><span></div><div class="col-10">Type 1</div>
@@ -160,9 +160,9 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         <button type="button" class="btn btn-sm btn-danger rounded-0" id="confirmDeleteEvent">Yes</button>
       </div>
     </div>
-  </div> 
+  </div>       
 </div>
-                        <!-- edit type of event -->
+                        <!-- edit type of event -->   
            
            <div class="modal fade" id="staticBackdropthree" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog cal-modal-dialog ">  
@@ -170,12 +170,12 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       <div class="modal-header modal-tile-header">   
         <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel"> Add / Edit Event Type</h5>
      <!--   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
-      </div>  
+      </div>     
          
         
-      <div class="modal-body  modalbody-CALENDAR">
+      <div class="modal-body  modalbody-CALENDAR">   
      
-      <div class="row my-2 "><div class="col-1"></div><div class="col-2 text-center fw-bolder">Title</div>
+      <div class="row bottomalign "><div class="col-1"></div><div class="col-2 text-center fw-bolder">Title</div>
       <div class="col-7 text-center fw-bolder headcoloralign">Color</div></div>
       <div id="Vieweventtype"></div>    
       
@@ -255,15 +255,20 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $(".dlt" + editdata).show();
       $(".tick" + editdata).hide();
       $(".cancel" + editdata).hide();
-      $(".label" + editdata).show();
+      $(".label" + editdata).show();   
       $(".view" + editdata).hide();
     });
     $(document).on("click", ".tickiconeventtypes", async function () {
       var editdata = "";
       editdata = $(this).attr("data-id");
+       if (mandatoryforupdateaction()) {
+        await updateeventtype(editdata);
+      } else {
+        console.log("All fileds not filled");
+      }
       console.log(editdata);
 
-      await updateeventtype(editdata);
+      
     });
     $(document).on("click", ".deleteiconeventtypes", async function () {
       dltid = "";
@@ -324,8 +329,13 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     // $("#StartTimeHour").html(htmlforHour);
     // $("#EndTimeHour").html('');
     // $("#EndTimeHour").html(htmlforHour);
-    $("#btnmodalSubmit").click(function () {
-      insertevent();
+    $("#btnmodalSubmit").click(async function () {
+      if (mandatoryforinsertevent()) {
+        await insertevent();   
+      } else {
+        console.log("All fileds not filled");
+      }
+    
     });
 
     // $(".btn-close,.btn-secondary").click(function()
@@ -380,8 +390,13 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         $("#eventDescritpion").val(filteredarray[0].description);
     });
 
-    $("#btnmodalEdit").click(function () {
-      updateevent(EditID);
+    $("#btnmodalEdit").click( async function () {
+      if (mandatoryforupdateeventtype()) {  
+        await updateevent(EditID);      
+      } else {
+        console.log("All fileds not filled");
+      }
+      
     });
     $("#btnmodalDelete").click(() => {
       (<HTMLElement>(
@@ -626,7 +641,7 @@ async function geteventtype() {
         for (var i = 0; i < item.length; i++) {
           count++;
           if (count == item.length) {
-            htmlforeventtype += `<div class="row align-items-start my-3 mx-2"><div class="col-1">${
+            htmlforeventtype += `<div class="row align-items-start my-2 mx-2"><div class="col-1">${
               i + 1
             }</div><div class="col-4">
             <div class="label${i} titlecolalign"><label class="">${
@@ -645,9 +660,9 @@ async function geteventtype() {
        <span class="deleteiconeventtypes dlt${i}" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal" data-id="${i}"></span> 
        <span class="tickiconeventtypes tick${i}" data-id="${i}"></span>
        <span class="canceliconeventtypes cancel${i}" data-id="${i}"></span>
-       <span class= "addiconeidttypes"> </span> </div></div>`;
+       <span class= "addiconeidttypes"> </span> </div></div>`;  
           } else {
-            htmlforeventtype += `<div class="row align-items-start my-3 mx-2"><div class="col-1">${
+            htmlforeventtype += `<div class="row align-items-start my-2 mx-2"><div class="col-1">${
               i + 1
             }</div><div class="col-4">
             <div class="label${i} titlecolalign"><label class="">${
@@ -661,19 +676,19 @@ async function geteventtype() {
         <input type="text" class="form-control rounded-0 titlecolor view${i}" data-id="${i}" value="${
               item[i].Color
             }"></div>
-       <div class="col-2 editicontypes">
+       <div class="col-2 editicontypes">  
        <span class="editiconeventtypes pencil${i}" data-id="${i}"></span>  
        <span class="deleteiconeventtypes dlt${i}" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal" data-id="${i}"></span> 
        <span class="tickiconeventtypes tick${i}" data-id="${i}"></span>
        <span class="canceliconeventtypes cancel${i}" data-id="${i}"></span> </div></div>`;
           }
           htmlforbindeventtype+=`<li class="py-2  d-flex row eventborder">         
-          <div class="col-2 "><span class= "eventtypescircle" style="background-color:${item[i].Color}"><span></div><div class="col-10">${item[i].Title}</div>
-          </li>`;
+          <div class="col-1"><span class= "eventtypescircle" style="background-color:${item[i].Color}"><span></div><div class="col-10">${item[i].Title}</div>
+          </li>`;    
            //htmlforbindeventtype+=`<div style="background-color:${item[i].Color}"></div><a href="#" class="list-group-item list-group-item-action text-center" style="background-color:${item[i].Color}">${item[i].Title}</a>`;
         }
         $("#Vieweventtype").html("");
-        $("#Vieweventtype").html(htmlforeventtype);
+        $("#Vieweventtype").html(htmlforeventtype);   
          $("#bindeventtype").html("");
          $("#bindeventtype").html(htmlforbindeventtype);
         $(".tickiconeventtypes").hide();
@@ -751,12 +766,55 @@ function DeleteEventType(TypeID) {
 function mandatoryforaddaction() {
   var isAllvalueFilled = true;
   if (!$("#addnewevent").val()) {
-    alertify.error("Please enter Type of Event");
+    alertify.error("Please enter Title"); 
     isAllvalueFilled = false;
   } else if (!$("#addnewcolor").val()) {
     alertify.error("Please enter Color");
     isAllvalueFilled = false;
+  }   
+  return isAllvalueFilled;
+}
+function mandatoryforinsertevent(){
+  var isAllvalueFilled = true;
+  if (!$("#eventTitle").val()) {
+    alertify.error("Please enter Title");
+    isAllvalueFilled = false;
+  } else if ($("#TypeOfEvent option:selected").text())  {    
+    alertify.error("Please  Select Type of Event");
+    isAllvalueFilled = false;    
   }
+  else if (!$("#eventDescritpion").val()) {
+    alertify.error("Please Enter Description");
+    isAllvalueFilled = false;
+  }
+ 
+  return isAllvalueFilled;
+}  
+function mandatoryforupdateaction() {
+  var isAllvalueFilled = true;
+  if (!$(".titleevent").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } else if (!$(".titlecolor").val()) {
+    alertify.error("Please enter Color");
+    isAllvalueFilled = false;   
+  }
+  return isAllvalueFilled;
+}
+function mandatoryforupdateeventtype() {
+  var isAllvalueFilled = true;
+  if (!$("#eventTitle").val()) {
+    alertify.error("Please Enter the Title");
+    isAllvalueFilled = false;
+  } 
+  // else if ($("#TypeOfEvent option:selected").text()) {    
+  //   alertify.error("Please Select type of event");
+  //   isAllvalueFilled = false;    
+  // }
+  else if (!$("#eventDescritpion").val()) {
+    alertify.error("Please Enter Description");
+    isAllvalueFilled = false;  
+  }   
   return isAllvalueFilled;
 }
 function Alert(strMewssageEN) {
