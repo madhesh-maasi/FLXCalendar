@@ -296,13 +296,13 @@ display: inline-block;
 } */
 .boxcal{
   /* background-color: #cacaca; */
-  min-height: 25.1rem;
+  min-height: 22.9rem;
   width: 14rem; 
   border: 1px solid #cacaca;
-  max-height: 25.1rem;  
+  max-height: 22.9rem;  
   overflow-y:auto ; 
   scrollbar-color: #727272 #f5f5f5;
-  scrollbar-width: 6px;
+  scrollbar-width: 6px;  
   overflow-x:hidden;
 }
 .boxcal::-webkit-scrollbar-track {

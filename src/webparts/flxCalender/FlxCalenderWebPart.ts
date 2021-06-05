@@ -809,8 +809,8 @@ function mandatoryforupdateeventtype() {
   } 
   // else if ($("#TypeOfEvent option:selected").text()) {    
   //   alertify.error("Please Select type of event");
-  //   isAllvalueFilled = false;    
-  // }
+  //   isAllvalueFilled = false;      
+  // }  
   else if (!$("#eventDescritpion").val()) {
     alertify.error("Please Enter Description");
     isAllvalueFilled = false;  
