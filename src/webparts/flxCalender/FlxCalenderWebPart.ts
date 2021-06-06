@@ -56,6 +56,10 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     var siteindex = listUrl.toLocaleLowerCase().indexOf("sites");
     listUrl = listUrl.substr(siteindex - 1) + "/Lists/";
     this.domElement.innerHTML = `
+ 
+    <div class="loader-section" style="display:none"> 
+    <div class="loader"></div>
+    </div></div> 
     <div class="d-flex">
 <div class="cal-sec-eventtypes my-5"> 
 <div class="tile-head-calendar p-1  ">  
@@ -447,6 +451,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 }
 
 const BindTypes = async () => {
+  $(".loader-section").show();
   let TypesOfEvent = await sp.web
     .getList(listUrl + "TypeOfEvent")
     .items.top(5000)
@@ -467,8 +472,12 @@ const BindTypes = async () => {
       type: "component",
     });
   }, 500);
+  $(".loader-section").hide();   
 };
+
 function BindCalendar(Calendardetails) {
+  $(".loader-section").show();
+
   var calendarEl = document.getElementById("myCalendar");
 
   var calendar = new Calendar(calendarEl, {
@@ -496,9 +505,13 @@ function BindCalendar(Calendardetails) {
   });
   cleardata();
   $("#Startdate,#Enddate").val(moment().format("YYYY-MM-DD"));
+  $(".loader-section").hide();
+
 }
 
 async function getCalendarEvents() {
+  $(".loader-section").show();
+
   await sp.web.lists
     .getByTitle("EventsList")
     .items.select(
@@ -544,8 +557,11 @@ async function getCalendarEvents() {
     .catch(function (error) {
       alert("Error In Calendar Webpart");
     });
+    $(".loader-section").hide();
+
 }
 async function insertevent() {
+  $(".loader-section").show();
   // var starttime=$("#Startdate").val()+"T"+$("#StartTime").val()+":"+$("#StartTimeHour").val()+":00";
   // var endtime=$("#Enddate").val()+"T"+$("#EndTime").val()+":"+$("#EndTimeHour").val()+":00";
   let starttime = $("#Startdate").val().split(" ").join("T");
@@ -568,12 +584,16 @@ async function insertevent() {
       await getCalendarEvents();
       $("#btnEventModalClose").trigger("click");
       AlertMessage("<div class='alertfy-success'>Submitted successfully</div>");
+
     })
     .catch(function (error) {
       alert("Error Occured");
     });
+    $(".loader-section").hide();
 }
 async function updateevent(itemid) {
+  $(".loader-section").show();
+
   // var starttime=$("#Startdate").val()+"T"+$("#StartTime").val()+":"+$("#StartTimeHour").val()+":00";
   // var endtime=$("#Enddate").val()+"T"+$("#EndTime").val()+":"+$("#EndTimeHour").val()+":00";
   //Maasi
@@ -600,8 +620,10 @@ async function updateevent(itemid) {
     .catch(function (error) {
       alert("Error Occured");
     });
+    $(".loader-section").hide();
 }
 const deleteEvent = async (itemid) => {
+  $(".loader-section").show();
   await sp.web.lists
     .getByTitle("EventsList")
     .items.getById(itemid)
@@ -612,8 +634,12 @@ const deleteEvent = async (itemid) => {
     .catch((error) => {
       alert("Error Occured");
     });
+    $(".loader-section").hide();
+
 };
 function cleardata() {
+  $(".loader-section").show();
+
   $("#eventTitle,#eventDescritpion").val("");
   $("#Startdate,#Enddate").val("");
   $("#Startdate,#Enddate").val(moment().format("YYYY/MM/DD HH:mm"));
@@ -621,8 +647,12 @@ function cleardata() {
   $("#EventColor").val("0");
   $("#TypeOfEvent").val("0");
   EditID = "";
+  $(".loader-section").hide();
+
 }
 async function geteventtype() {
+  $(".loader-section").show();
+
   $("#addnewevent").val("");
   $("#addnewcolor").val("");
   $(".addeventscreen").hide();
@@ -636,7 +666,7 @@ async function geteventtype() {
       var count = 0;
       alleventitem = item;
       console.log("item");
-      console.log(alleventitem);
+      console.log(alleventitem);   
       if (item.length > 0) {
         for (var i = 0; i < item.length; i++) {
           count++;
@@ -649,11 +679,11 @@ async function geteventtype() {
             }</label></div>
         <input type="text" class="form-control rounded-0 titleevent view${i}" data-id="${i}" value="${
               item[i].Title
-            }"></div>
+            }"></div>     
         <div class="col-5">  
-        <div class="label${i} coloralgin"><label class="">${item[i].Color}</label></div>
+        <div class="label${i} coloralgin"><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
         <input type="text" class="form-control rounded-0 titlecolor view${i}" data-id="${i}" value="${
-              item[i].Color
+              item[i].Color  
             }"></div>
        <div class="col-2 editicontypes">
        <span class="editiconeventtypes pencil${i}" data-id="${i}"></span>  
@@ -672,7 +702,7 @@ async function geteventtype() {
               item[i].Title
             }"></div>
         <div class="col-5">
-        <div class="label${i} coloralgin "><label class="">${item[i].Color}</label></div>
+        <div class="label${i} coloralgin "><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
         <input type="text" class="form-control rounded-0 titlecolor view${i}" data-id="${i}" value="${
               item[i].Color
             }"></div>
@@ -709,8 +739,12 @@ async function geteventtype() {
     .catch((error) => {
       console.log(error);
     });
+    $(".loader-section").hide();
+
 }
 async function inserteventtype() {
+  $(".loader-section").show();
+
   var requestdata = {
     Title: $("#addnewevent").val(),
     Color: $("#addnewcolor").val(),
@@ -724,8 +758,12 @@ async function inserteventtype() {
     .catch(function (error) {
       alert("Error Occured");
     });
+    $(".loader-section").hide();
+
 }
 async function updateeventtype(TypeID) {
+  $(".loader-section").show();
+
   $(".titleevent").each(function () {
     alleventitem[$(this).attr("data-id")].Title = $(this).val();
   });
@@ -748,8 +786,12 @@ async function updateeventtype(TypeID) {
     .catch(function (error) {
       alert("Error Occured");
     });
+    $(".loader-section").hide();
+
 }
 function DeleteEventType(TypeID) {
+  $(".loader-section").show();
+
   var Id = alleventitem[TypeID].ID;
   sp.web.lists
     .getByTitle("TypeOfEvent")
@@ -762,8 +804,12 @@ function DeleteEventType(TypeID) {
     .catch((error) => {
       alert("Error Occured");
     });
+    $(".loader-section").hide();
+
 }
 function mandatoryforaddaction() {
+  
+
   var isAllvalueFilled = true;
   if (!$("#addnewevent").val()) {
     alertify.error("Please enter Title"); 
@@ -779,10 +825,11 @@ function mandatoryforinsertevent(){
   if (!$("#eventTitle").val()) {
     alertify.error("Please enter Title");
     isAllvalueFilled = false;
-  } else if ($("#TypeOfEvent option:selected").text())  {    
-    alertify.error("Please  Select Type of Event");
-    isAllvalueFilled = false;    
-  }
+  } 
+  // else if ($("#TypeOfEvent option:selected").text())  {    
+  //   alertify.error("Please  Select Type of Event");
+  //   isAllvalueFilled = false;    
+  // }  
   else if (!$("#eventDescritpion").val()) {
     alertify.error("Please Enter Description");
     isAllvalueFilled = false;
@@ -844,6 +891,7 @@ function AlertMessage(strMewssageEN) {
       message: strMewssageEN,
       onok: function () {
         window.location.href = "#";
+        $(".loader-section").hide();
         location.reload();
       },
     })
