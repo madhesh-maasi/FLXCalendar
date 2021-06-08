@@ -38,6 +38,8 @@ var EditID = "";
 let listUrl = "";
 var alleventitem = [];
 var dltid = "";
+var FilteredAdmin =[];
+var currentuser = "";
 export interface IFlxCalenderWebPartProps {
   description: string;
 }
@@ -53,6 +55,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 
   public render(): void {
     listUrl = this.context.pageContext.web.absoluteUrl;
+    currentuser = this.context.pageContext.user.email;
     var siteindex = listUrl.toLocaleLowerCase().indexOf("sites");
     listUrl = listUrl.substr(siteindex - 1) + "/Lists/";
     this.domElement.innerHTML = `
@@ -239,7 +242,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       
       `;
     BindTypes();
-
+    getadminfromsite();
     $(document).on("click", ".editiconeventtypes", async function () {
       var editdata = "";
       editdata = $(this).attr("data-id");
@@ -361,6 +364,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       cleardata();
     });
     $(document).on("click", ".clsEventEdit", function () {
+      if (FilteredAdmin.length>0) {
       $(".btn-openmodal").trigger("click");
       $("#calendarModalLabel").text("Edit Event");
       $("#btnmodalDelete").show();
@@ -394,6 +398,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $("#EventColor").val(filteredarray[0].ColorId);
       if (filteredarray[0].description)
         $("#eventDescritpion").val(filteredarray[0].description);
+      }
     });
 
     $("#btnmodalEdit").click( async function () {
@@ -419,9 +424,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     $("#confirmDeleteEvent").click(() => {
       deleteEvent(EditID);
     });
-    getCalendarEvents();
-    geteventtype();
-
+    
     //BindCalendar("");
   }
 
@@ -451,7 +454,31 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     };
   }
 }
-
+async function getadminfromsite() {
+  $(".loader-section").show();
+  var AdminInfo = [];
+  await sp.web.siteGroups
+    .getByName("FLX Admins")
+    .users.get()
+    .then(function (result) {
+      for (var i = 0; i < result.length; i++) {
+        AdminInfo.push({
+          Title: result[i].Title,
+          ID: result[i].Id,
+          Email: result[i].Email,
+        });
+      }
+      FilteredAdmin = AdminInfo.filter((admin)=>{return (admin.Email == currentuser)});
+      console.log(FilteredAdmin);
+      getCalendarEvents();
+      geteventtype();
+    })
+    .catch(function (err) {
+      alert("Group not found: " + err);
+      $(".loader-section").hide();
+    });
+    $(".loader-section").hide();
+}
 const BindTypes = async () => {
   $(".loader-section").show();
   let TypesOfEvent = await sp.web
@@ -555,6 +582,11 @@ async function getCalendarEvents() {
         });
       }
       BindCalendar(arrCalendarEvents);
+      if (FilteredAdmin.length<=0) 
+      {
+        $(".calendar-section").addClass("view-page-option");
+      }
+
     })
     .catch(function (error) {
       alert("Error In Calendar Webpart");
@@ -736,6 +768,11 @@ async function geteventtype() {
           $("#addnewcolor").val("");
           $(".addeventscreen").hide();
         });
+        if (FilteredAdmin.length<=0) 
+      {
+        $(".calcustomize").hide();
+      }
+
       }
     })
     .catch((error) => {
