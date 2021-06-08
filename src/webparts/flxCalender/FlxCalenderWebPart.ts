@@ -99,7 +99,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
       </div>
       <div class="modal-body calendar-popup">
-        <div class="row align-items-center my-3"><div class="col-4">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="eventTitle" aria-describedby=""></div></div>
+        <div class="row align-items-center my-3"><div class="col-4 titlecalman">Title</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="eventTitle" aria-describedby=""></div></div>
         <div class="row align-items-center my-3"><div class="col-4">Start Date</div><div class="col-1">:</div><div class="col-7"><input type="text" class="form-control rounded-0" id="Startdate" value="" aria-describedby=""></div></div>
         
         <!-- <div class="row align-items-center my-3"><div class="col-4">Start Time</div><div class="col-1">:</div>
@@ -119,14 +119,14 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         </select>       
         <select class="form-control" id="EndTimeHour">  
         <option value="00">00</option>
-        </select></div>
+        </select></div>   
         </div>-->     
-        <div class="row align-items-center my-3"><div class="col-4">Type of Event</div><div class="col-1">:</div>
+        <div class="row align-items-center my-3"><div class="col-4 titlecalman">Type of Event</div><div class="col-1">:</div>
         <div class="col-7 custom-arrow"><select class="form-control rounded-0" id="TypeOfEvent" aria-describedby="">
         <option>Select</option></select></div> </div> 
         <div class="row align-items-center my-3"><div class="col-4">Description</div><div class="col-1">:</div><div class="col-7">
-        <textarea class="form-control rounded-0 addDescritpion" id="eventDescritpion" aria-describedby=""></textarea>
-        </div></div> 
+        <textarea class="form-control rounded-0 addDescritpion text-dark" id="eventDescritpion" aria-describedby=""></textarea>
+        </div></div>   
       </div>    
       <div class="modal-footer justify-content-between"> 
       <div class="btns-left">
@@ -175,12 +175,12 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         <h5 class="modal-title w-100 text-center modallearn-color" id="staticBackdropLabel"> Add / Edit Event Type</h5>
      <!--   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
       </div>     
-         
+           
         
       <div class="modal-body  modalbody-CALENDAR">   
      
-      <div class="row bottomalign "><div class="col-1"></div><div class="col-2 text-center fw-bolder">Title</div>
-      <div class="col-7 text-center fw-bolder headcoloralign">Color</div></div>
+      <div class="row bottomalign "><div class="col-1"></div><div class="col-2 text-center fw-bolder titlecalman">Title</div>
+      <div class="col-7 text-center fw-bolder headcoloralign titlecalman">Color</div></div>
       <div id="Vieweventtype"></div>    
       
     <div class="row align-items-start my-3 mx-2 addeventscreen"><div class="col-1"></div><div class="col-4">
@@ -334,6 +334,8 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     // $("#EndTimeHour").html('');
     // $("#EndTimeHour").html(htmlforHour);
     $("#btnmodalSubmit").click(async function () {
+      console.log($("#TypeOfEvent").val());
+      
       if (mandatoryforinsertevent()) {
         await insertevent();   
       } else {
@@ -363,13 +365,13 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $("#calendarModalLabel").text("Edit Event");
       $("#btnmodalDelete").show();
       $("#btnmodalEdit").show();
-      $("#btnmodalSubmit").hide();
+      $("#btnmodalSubmit").hide();  
       var indexid = $(this).attr("data-id");
       EditID = indexid;
       var filteredarray = [];
       for (var i = 0; i < arrCalendarEvents.length; i++) {
         if (arrCalendarEvents[i].id == indexid) {
-          filteredarray.push(arrCalendarEvents[i]);
+          filteredarray.push(arrCalendarEvents[i]);            
         }
       }
 
@@ -401,7 +403,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         console.log("All fileds not filled");
       }
       
-    });
+    });  
     $("#btnmodalDelete").click(() => {
       (<HTMLElement>(
         document.querySelector(".modal-dialog.calendar-modal")
@@ -803,12 +805,11 @@ function DeleteEventType(TypeID) {
     })
     .catch((error) => {
       alert("Error Occured");
-    });
+    });  
     $(".loader-section").hide();
 
 }
 function mandatoryforaddaction() {
-  
 
   var isAllvalueFilled = true;
   if (!$("#addnewevent").val()) {
@@ -817,7 +818,7 @@ function mandatoryforaddaction() {
   } else if (!$("#addnewcolor").val()) {
     alertify.error("Please enter Color");
     isAllvalueFilled = false;
-  }   
+  }     
   return isAllvalueFilled;
 }
 function mandatoryforinsertevent(){
@@ -826,14 +827,14 @@ function mandatoryforinsertevent(){
     alertify.error("Please enter Title");
     isAllvalueFilled = false;
   } 
-  // else if ($("#TypeOfEvent option:selected").text())  {    
-  //   alertify.error("Please  Select Type of Event");
-  //   isAllvalueFilled = false;    
-  // }  
-  else if (!$("#eventDescritpion").val()) {
-    alertify.error("Please Enter Description");
-    isAllvalueFilled = false;
-  }
+  else if ($("#TypeOfEvent").val() == "0")  {    
+    alertify.error("Please  Select Type of Event");
+    isAllvalueFilled = false;    
+  }  
+  // else if (!$("#eventDescritpion").val()) {
+  //   alertify.error("Please Enter Description");
+  //   isAllvalueFilled = false;
+  // }
  
   return isAllvalueFilled;
 }  
@@ -854,14 +855,14 @@ function mandatoryforupdateeventtype() {
     alertify.error("Please Enter the Title");
     isAllvalueFilled = false;
   } 
-  // else if ($("#TypeOfEvent option:selected").text()) {    
-  //   alertify.error("Please Select type of event");
-  //   isAllvalueFilled = false;      
-  // }  
-  else if (!$("#eventDescritpion").val()) {
-    alertify.error("Please Enter Description");
-    isAllvalueFilled = false;  
+  else if ($("#TypeOfEvent").val() == "0")  {    
+    alertify.error("Please  Select Type of Event");
+    isAllvalueFilled = false;    
   }   
+  // else if (!$("#eventDescritpion").val()) {
+  //   alertify.error("Please Enter Description");
+  //   isAllvalueFilled = false;  
+  // }   
   return isAllvalueFilled;
 }
 function Alert(strMewssageEN) {
