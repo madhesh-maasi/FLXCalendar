@@ -182,7 +182,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       <div class="row bottomalign "><div class="col-1"></div><div class="col-2 text-center fw-bolder ">Title</div>
       <div class="col-7 text-center fw-bolder headcoloralign ">Color</div></div>
       <div id="Vieweventtype"></div>    
-      
+       
     <div class="row align-items-start my-3 mx-2 addeventscreen"><div class="col-1"></div><div class="col-4">
       <input type="text" class="form-control  rounded-0" id="addnewevent" autocomplete="off" aria-describedby="" ></div>
       <div class="col-5">
@@ -683,7 +683,7 @@ async function geteventtype() {
               item[i].Title
             }"></div>     
         <div class="col-5">  
-        <div class="label${i} coloralgin"><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
+        <div class="label${i} coloralgin py-1"><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
         <input type="text" class="form-control rounded-0 titlecolor view${i}" data-id="${i}" value="${
               item[i].Color  
             }"></div>
@@ -692,7 +692,7 @@ async function geteventtype() {
        <span class="deleteiconeventtypes dlt${i}" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal" data-id="${i}"></span> 
        <span class="tickiconeventtypes tick${i}" data-id="${i}"></span>
        <span class="canceliconeventtypes cancel${i}" data-id="${i}"></span>
-       <span class= "addiconeidttypes"> </span> </div></div>`;  
+       <span class= "addiconeidttypes"> </span> </div></div>`;   
           } else {
             htmlforeventtype += `<div class="row align-items-start my-2 mx-2"><div class="col-1">${
               i + 1
@@ -703,8 +703,8 @@ async function geteventtype() {
         <input type="text" class="form-control rounded-0 titleevent view${i}" data-id="${i}" value="${
               item[i].Title
             }"></div>
-        <div class="col-5">
-        <div class="label${i} coloralgin "><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
+        <div class="col-5"> 
+        <div class="label${i} coloralgin py-1"><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
         <input type="text" class="form-control rounded-0 titlecolor view${i}" data-id="${i}" value="${
               item[i].Color
             }"></div>
