@@ -381,6 +381,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         $("#btnmodalEdit").hide();
         $("#btnmodalSubmit").hide();
       }
+      $(".fc-popover").hide();
       $(".btn-openmodal").trigger("click");
       $("#calendarModalLabel").text("Edit Event");
       // $("#btnmodalDelete").show();
@@ -540,12 +541,14 @@ function BindCalendar(Calendardetails) {
       $(event.el).attr("data-trigger", "focus");
       $(event.el).attr("data-id", event.event.id);
       $(event.el).addClass("clsEventEdit");
+      
     },
   });
   calendar.refetchEvents();
   calendar.render();
   $(".clsEventEdit").each(function () {
     $(this).removeClass("fc-event-draggable");
+
   });
   cleardata();
   $("#Startdate,#Enddate").val(moment().format("YYYY-MM-DD"));
