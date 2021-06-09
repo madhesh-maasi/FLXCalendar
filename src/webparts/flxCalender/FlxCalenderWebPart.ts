@@ -355,9 +355,16 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     // });
 
     $("#btnEventModalClose").click(function () {
+      if (FilteredAdmin.length>0) {
       $("#btnmodalSubmit").show();
       $("#btnmodalEdit").hide();
       $("#btnmodalDelete").hide();
+      }
+      else{
+        $("#btnmodalSubmit").hide();
+      $("#btnmodalEdit").hide();
+      $("#btnmodalDelete").hide();
+      }
     });
     $(".btn-openmodal").click(function () {
       $("#calendarModalLabel").text("Add Event");
@@ -365,11 +372,20 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     });
     $(document).on("click", ".clsEventEdit", function () {
       if (FilteredAdmin.length>0) {
+        $("#btnmodalDelete").show();
+        $("#btnmodalEdit").show();
+        $("#btnmodalSubmit").hide();
+      }
+      else{
+        $("#btnmodalDelete").hide();
+        $("#btnmodalEdit").hide();
+        $("#btnmodalSubmit").hide();
+      }
       $(".btn-openmodal").trigger("click");
       $("#calendarModalLabel").text("Edit Event");
-      $("#btnmodalDelete").show();
-      $("#btnmodalEdit").show();
-      $("#btnmodalSubmit").hide();  
+      // $("#btnmodalDelete").show();
+      // $("#btnmodalEdit").show();
+      // $("#btnmodalSubmit").hide();  
       var indexid = $(this).attr("data-id");
       EditID = indexid;
       var filteredarray = [];
@@ -398,7 +414,6 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $("#EventColor").val(filteredarray[0].ColorId);
       if (filteredarray[0].description)
         $("#eventDescritpion").val(filteredarray[0].description);
-      }
     });
 
     $("#btnmodalEdit").click( async function () {
@@ -584,6 +599,7 @@ async function getCalendarEvents() {
       BindCalendar(arrCalendarEvents);
       if (FilteredAdmin.length<=0) 
       {
+        disableallfields();
         $(".calendar-section").addClass("view-page-option");
       }
 
@@ -937,4 +953,12 @@ function AlertMessage(strMewssageEN) {
     .show()
     .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div> ")
     .set("closable", false);
+}
+function disableallfields()
+{
+  $("#eventTitle").prop('disabled',true);
+  $("#Startdate").prop('disabled',true);
+  $("#Enddate").prop('disabled',true);
+  $("#TypeOfEvent").prop('disabled',true);
+  $("#eventDescritpion").prop('disabled',true);
 }
