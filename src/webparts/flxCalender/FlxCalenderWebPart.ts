@@ -38,6 +38,8 @@ var EditID = "";
 let listUrl = "";
 var alleventitem = [];
 var dltid = "";
+var FilteredAdmin =[];
+var currentuser = "";
 export interface IFlxCalenderWebPartProps {
   description: string;
 }
@@ -53,6 +55,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
 
   public render(): void {
     listUrl = this.context.pageContext.web.absoluteUrl;
+    currentuser = this.context.pageContext.user.email;
     var siteindex = listUrl.toLocaleLowerCase().indexOf("sites");
     listUrl = listUrl.substr(siteindex - 1) + "/Lists/";
     this.domElement.innerHTML = `
@@ -239,7 +242,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       
       `;
     BindTypes();
-
+    getadminfromsite();
     $(document).on("click", ".editiconeventtypes", async function () {
       var editdata = "";
       editdata = $(this).attr("data-id");
@@ -352,20 +355,37 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     // });
 
     $("#btnEventModalClose").click(function () {
+      if (FilteredAdmin.length>0) {
       $("#btnmodalSubmit").show();
       $("#btnmodalEdit").hide();
       $("#btnmodalDelete").hide();
+      }
+      else{
+        $("#btnmodalSubmit").hide();
+      $("#btnmodalEdit").hide();
+      $("#btnmodalDelete").hide();
+      }
     });
     $(".btn-openmodal").click(function () {
       $("#calendarModalLabel").text("Add Event");
       cleardata();
     });
     $(document).on("click", ".clsEventEdit", function () {
+      if (FilteredAdmin.length>0) {
+        $("#btnmodalDelete").show();
+        $("#btnmodalEdit").show();
+        $("#btnmodalSubmit").hide();
+      }
+      else{
+        $("#btnmodalDelete").hide();
+        $("#btnmodalEdit").hide();
+        $("#btnmodalSubmit").hide();
+      }
       $(".btn-openmodal").trigger("click");
       $("#calendarModalLabel").text("Edit Event");
-      $("#btnmodalDelete").show();
-      $("#btnmodalEdit").show();
-      $("#btnmodalSubmit").hide();  
+      // $("#btnmodalDelete").show();
+      // $("#btnmodalEdit").show();
+      // $("#btnmodalSubmit").hide();  
       var indexid = $(this).attr("data-id");
       EditID = indexid;
       var filteredarray = [];
@@ -419,9 +439,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     $("#confirmDeleteEvent").click(() => {
       deleteEvent(EditID);
     });
-    getCalendarEvents();
-    geteventtype();
-
+    
     //BindCalendar("");
   }
 
@@ -451,7 +469,31 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     };
   }
 }
-
+async function getadminfromsite() {
+  $(".loader-section").show();
+  var AdminInfo = [];
+  await sp.web.siteGroups
+    .getByName("FLX Admins")
+    .users.get()
+    .then(function (result) {
+      for (var i = 0; i < result.length; i++) {
+        AdminInfo.push({
+          Title: result[i].Title,
+          ID: result[i].Id,
+          Email: result[i].Email,
+        });
+      }
+      FilteredAdmin = AdminInfo.filter((admin)=>{return (admin.Email == currentuser)});
+      console.log(FilteredAdmin);
+      getCalendarEvents();
+      geteventtype();
+    })
+    .catch(function (err) {
+      alert("Group not found: " + err);
+      $(".loader-section").hide();
+    });
+    $(".loader-section").hide();
+}
 const BindTypes = async () => {
   $(".loader-section").show();
   let TypesOfEvent = await sp.web
@@ -555,6 +597,12 @@ async function getCalendarEvents() {
         });
       }
       BindCalendar(arrCalendarEvents);
+      if (FilteredAdmin.length<=0) 
+      {
+        disableallfields();
+        $(".calendar-section").addClass("view-page-option");
+      }
+
     })
     .catch(function (error) {
       alert("Error In Calendar Webpart");
@@ -736,6 +784,11 @@ async function geteventtype() {
           $("#addnewcolor").val("");
           $(".addeventscreen").hide();
         });
+        if (FilteredAdmin.length<=0) 
+      {
+        $(".calcustomize").hide();
+      }
+
       }
     })
     .catch((error) => {
@@ -900,4 +953,12 @@ function AlertMessage(strMewssageEN) {
     .show()
     .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div> ")
     .set("closable", false);
+}
+function disableallfields()
+{
+  $("#eventTitle").prop('disabled',true);
+  $("#Startdate").prop('disabled',true);
+  $("#Enddate").prop('disabled',true);
+  $("#TypeOfEvent").prop('disabled',true);
+  $("#eventDescritpion").prop('disabled',true);
 }

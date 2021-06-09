@@ -614,3 +614,9 @@ span.squarecal {
 div#Vieweventtype .row {
   height: 2.5rem;
 }
+.view-page-option .btn[data-bs-target="#calendarModal"]{
+  display: none;
+  }
+.view-page-option button.fc-today-button.fc-button.fc-button-primary{
+    margin-right: 0!important;
+  }
