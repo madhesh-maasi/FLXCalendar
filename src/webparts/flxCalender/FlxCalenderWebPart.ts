@@ -98,7 +98,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   <div class="modal-dialog calendar-modal">
     <div class="modal-content rounded-0">     
       <div class="modal-header">
-        <h5 class="modal-title fw-bold w-100 text-center" id="calendarModalLabel">Add / Update Event</h5>
+        <h5 class="modal-title fw-bold w-100 text-center" id="calendarModalLabel">Add Event</h5>
        <!-- <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button> -->
       </div>  
       <div class="modal-body calendar-popup">
@@ -367,7 +367,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       }
     });
     $(".btn-openmodal").click(function () {
-      $("#calendarModalLabel").text("Add Event");
+      //$("#calendarModalLabel").text("Add Event");
       cleardata();
     });
     $(document).on("click", ".clsEventEdit", function () {
@@ -375,15 +375,17 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         $("#btnmodalDelete").show();
         $("#btnmodalEdit").show();
         $("#btnmodalSubmit").hide();
+        $("#calendarModalLabel").text("Edit Event");
       }
       else{
+        $("#calendarModalLabel").text("View Event");
         $("#btnmodalDelete").hide();
         $("#btnmodalEdit").hide();
         $("#btnmodalSubmit").hide();
       }
       $(".fc-popover").hide();
       $(".btn-openmodal").trigger("click");
-      $("#calendarModalLabel").text("Edit Event");
+      
       // $("#btnmodalDelete").show();
       // $("#btnmodalEdit").show();
       // $("#btnmodalSubmit").hide();  
@@ -712,6 +714,7 @@ async function geteventtype() {
   await sp.web.lists
     .getByTitle("TypeOfEvent")
     .items.select("*")
+    .orderBy("Modified",false)
     .get()
     .then(async (item) => {
       var htmlforeventtype = "";
@@ -811,7 +814,9 @@ async function inserteventtype() {
     .getByTitle("TypeOfEvent")
     .items.add(requestdata)
     .then(async function (data) {
-      Alert("<div class='alertfy-success'>Submitted successfully</div>");
+      //Alert("<div class='alertfy-success'>Submitted successfully</div>");
+      BindTypes();
+      geteventtype();
     })
     .catch(function (error) {
       alert("Error Occured");
@@ -839,7 +844,9 @@ async function updateeventtype(TypeID) {
     .items.getById(Id)
     .update(requestdata)
     .then(async function (data) {
-      Alert("<div class='alertfy-success'>Updated successfully</div>");
+      //Alert("<div class='alertfy-success'>Updated successfully</div>");
+      BindTypes();
+      geteventtype();
     })
     .catch(function (error) {
       alert("Error Occured");
@@ -948,8 +955,8 @@ function AlertMessage(strMewssageEN) {
       message: strMewssageEN,
       onok: function () {
         window.location.href = "#";
-        $(".loader-section").hide();
         location.reload();
+        $(".loader-section").hide();
       },
     })
 

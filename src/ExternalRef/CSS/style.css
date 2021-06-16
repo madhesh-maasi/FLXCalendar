@@ -450,6 +450,7 @@ button.ajs-button.ajs-ok {
   margin-top: 9px;
   margin-left: 0.2rem;
   margin-right: 0.2rem;
+  cursor: pointer;
 }
 .canceliconaddcal {
   display: inline-block;
@@ -464,6 +465,7 @@ button.ajs-button.ajs-ok {
   /* right: 4.3rem; */
   margin-left: 0.2rem;
   margin-right: 0.2rem;
+  cursor: pointer;
 }
 .btneventtypes {
   margin-top: 26px;
