@@ -266,9 +266,22 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $(".view" + editdata).hide();
     });
     $(document).on("click", ".tickiconeventtypes", async function () {
-      var editdata = "";
+      var editdata;
       editdata = $(this).attr("data-id");
-       if (mandatoryforupdateaction()) {
+       if (mandatoryforupdateaction()) 
+       {
+
+        for(var i=0;i<alleventitem.length;i++)
+        {
+          if(editdata!=i)
+          {
+            if(alleventitem[i].Title==$(".clstitle"+editdata).val()||alleventitem[i].Color==$(".clstitlecolor"+editdata).val()){
+              alertify.error("Please Enter Different Title/Color");
+             return false;
+            }
+          }
+        }
+
         await updateeventtype(editdata);
       } else {
         console.log("All fileds not filled");
@@ -299,9 +312,17 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       geteventtype();
     });
     $("#btnEventSubmit").click(async function () {
-      if (mandatoryforaddaction()) {
+      if (mandatoryforaddaction()) 
+      {
+        for(var i=0;i<alleventitem.length;i++){
+          if(alleventitem[i].Title==$("#addnewevent").val()||alleventitem[i].Color==$("#addnewcolor").val()){
+            alertify.error("Please Enter Different Title/Color");
+           return false;
+          }
+        }
         await inserteventtype();
-      } else {
+      } else 
+      {
         console.log("All fileds not filled");
       }
     });
@@ -594,6 +615,7 @@ async function getCalendarEvents() {
           title: items[i].Title,
           start: sdate,
           end: edate,
+          display:"list-item",
           description: items[i].Description,
           backgroundColor: items[i].Color.Color,
           borderColor: items[i].Color.Color,
@@ -733,12 +755,12 @@ async function geteventtype() {
             <div class="label${i} titlecolalign"><label class="">${
               item[i].Title
             }</label></div>
-        <input type="text" class="form-control rounded-0 titleevent view${i}" data-id="${i}" value="${
+        <input type="text" class="form-control rounded-0 titleevent clstitle${i} view${i}" data-id="${i}" value="${
               item[i].Title
             }"></div>     
         <div class="col-5">  
         <div class="label${i} coloralgin py-1"><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
-        <input type="text" class="form-control rounded-0 titlecolor view${i}" data-id="${i}" value="${
+        <input type="text" class="form-control rounded-0 titlecolor clstitlecolor${i} view${i}" data-id="${i}" value="${
               item[i].Color  
             }"></div>
        <div class="col-2 editicontypes">
@@ -754,12 +776,12 @@ async function geteventtype() {
             <div class="label${i} titlecolalign"><label class="">${
               item[i].Title
             }</label></div>
-        <input type="text" class="form-control rounded-0 titleevent view${i}" data-id="${i}" value="${
+        <input type="text" class="form-control rounded-0 titleevent clstitle${i} view${i}" data-id="${i}" value="${
               item[i].Title
             }"></div>
         <div class="col-5"> 
         <div class="label${i} coloralgin py-1"><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
-        <input type="text" class="form-control rounded-0 titlecolor view${i}" data-id="${i}" value="${
+        <input type="text" class="form-control rounded-0 titlecolor clstitlecolor${i} view${i}" data-id="${i}" value="${
               item[i].Color
             }"></div>
        <div class="col-2 editicontypes">  
@@ -891,7 +913,7 @@ function mandatoryforinsertevent(){
     isAllvalueFilled = false;
   } 
   else if ($("#TypeOfEvent").val() == "0")  {    
-    alertify.error("Please  Select Type of Event");
+    alertify.error("Please Select Type of Event");
     isAllvalueFilled = false;    
   }  
   // else if (!$("#eventDescritpion").val()) {
@@ -919,7 +941,7 @@ function mandatoryforupdateeventtype() {
     isAllvalueFilled = false;
   } 
   else if ($("#TypeOfEvent").val() == "0")  {    
-    alertify.error("Please  Select Type of Event");
+    alertify.error("Please Select Type of Event");
     isAllvalueFilled = false;    
   }   
   // else if (!$("#eventDescritpion").val()) {
