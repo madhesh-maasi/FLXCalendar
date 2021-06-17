@@ -388,10 +388,11 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       }
     });
     $(".btn-openmodal").click(function () {
-      //$("#calendarModalLabel").text("Add Event");
+      $("#calendarModalLabel").text("Add Event");
       cleardata();
     });
     $(document).on("click", ".clsEventEdit", function () {
+      $(".btn-openmodal").trigger("click");
       if (FilteredAdmin.length>0) {
         $("#btnmodalDelete").show();
         $("#btnmodalEdit").show();
@@ -405,7 +406,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         $("#btnmodalSubmit").hide();
       }
       $(".fc-popover").hide();
-      $(".btn-openmodal").trigger("click");
+      
       
       // $("#btnmodalDelete").show();
       // $("#btnmodalEdit").show();
@@ -494,7 +495,6 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   }
 }
 async function getadminfromsite() {
-  $(".loader-section").show();
   var AdminInfo = [];
   await sp.web.siteGroups
     .getByName("FLX Admins")
@@ -514,12 +514,10 @@ async function getadminfromsite() {
     })
     .catch(function (err) {
       alert("Group not found: " + err);
-      $(".loader-section").hide();
     });
-    $(".loader-section").hide();
 }
 const BindTypes = async () => {
-  $(".loader-section").show();
+  //$(".loader-section").show();
   let TypesOfEvent = await sp.web
     .getList(listUrl + "TypeOfEvent")
     .items.top(5000)
@@ -540,11 +538,11 @@ const BindTypes = async () => {
       type: "component",
     });
   }, 500);
-  $(".loader-section").hide();   
+  //$(".loader-section").hide();   
 };
 
 function BindCalendar(Calendardetails) {
-  $(".loader-section").show();
+  //$(".loader-section").show();
 
   var calendarEl = document.getElementById("myCalendar");
 
@@ -575,12 +573,11 @@ function BindCalendar(Calendardetails) {
   });
   cleardata();
   $("#Startdate,#Enddate").val(moment().format("YYYY-MM-DD"));
-  $(".loader-section").hide();
+  //$(".loader-section").hide();
 
 }
 
 async function getCalendarEvents() {
-  $(".loader-section").show();
 
   await sp.web.lists
     .getByTitle("EventsList")
@@ -634,7 +631,6 @@ async function getCalendarEvents() {
     .catch(function (error) {
       alert("Error In Calendar Webpart");
     });
-    $(".loader-section").hide();
 
 }
 async function insertevent() {
@@ -728,7 +724,6 @@ function cleardata() {
 
 }
 async function geteventtype() {
-  $(".loader-section").show();
 
   $("#addnewevent").val("");
   $("#addnewcolor").val("");
@@ -822,7 +817,6 @@ async function geteventtype() {
     .catch((error) => {
       console.log(error);
     });
-    $(".loader-section").hide();
 
 }
 async function inserteventtype() {
