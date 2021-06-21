@@ -327,10 +327,11 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       }
     });
     $("#Startdate").datetimepicker({
-      dateFormat: "dd/mm/YY H:m",
+      format:'d/m/Y H:i'
+      
     });
     $("#Enddate").datetimepicker({
-      dateFormat: "dd/mm/YY H:m",
+      format:'d/m/Y H:m'
     });
     var htmlfortime = "";
     // for(var i=0;i<24;i++)
@@ -389,6 +390,9 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     });
     $(".btn-openmodal").click(function () {
       $("#calendarModalLabel").text("Add Event");
+      $("#btnmodalSubmit").show();
+      $("#btnmodalEdit").hide();
+      $("#btnmodalDelete").hide();
       cleardata();
     });
     $(document).on("click", ".clsEventEdit", function () {
@@ -426,10 +430,10 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       // Maasi
 
       $("#Startdate").val(
-        moment(filteredarray[0].start).format("YYYY/MM/DD HH:mm")
+        moment(filteredarray[0].start).format("DD/MM/YYYY HH:mm")
       );
       $("#Enddate").val(
-        moment(filteredarray[0].end).format("YYYY/MM/DD HH:mm")
+        moment(filteredarray[0].end).format("DD/MM/YYYY HH:mm")
       );
       // $("#StartTime").val(moment(filteredarray[0].start).format("HH"));
       // $("#StartTimeHour").val(moment(filteredarray[0].start).format("mm"));
@@ -637,9 +641,10 @@ async function insertevent() {
   $(".loader-section").show();
   // var starttime=$("#Startdate").val()+"T"+$("#StartTime").val()+":"+$("#StartTimeHour").val()+":00";
   // var endtime=$("#Enddate").val()+"T"+$("#EndTime").val()+":"+$("#EndTimeHour").val()+":00";
-  let starttime = $("#Startdate").val().split(" ").join("T");
-  let endtime = $("#Enddate").val().split(" ").join("T");
-  // console.log(moment(starttime).format());
+  // let starttime = $("#Startdate").val().split(" ").join("T");
+  // let endtime = $("#Enddate").val().split(" ").join("T");
+  let starttime = moment($("#Startdate").val(),"DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
+  let endtime =moment($("#Enddate").val(),"DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
   console.log($("#TypeOfEvent").val());
 
   var requestdata = {
@@ -670,8 +675,10 @@ async function updateevent(itemid) {
   // var starttime=$("#Startdate").val()+"T"+$("#StartTime").val()+":"+$("#StartTimeHour").val()+":00";
   // var endtime=$("#Enddate").val()+"T"+$("#EndTime").val()+":"+$("#EndTimeHour").val()+":00";
   //Maasi
-  let starttime = $("#Startdate").val().split(" ").join("T");
-  let endtime = $("#Enddate").val().split(" ").join("T");
+  // let starttime = $("#Startdate").val().split(" ").join("T");
+  // let endtime = $("#Enddate").val().split(" ").join("T");
+  let starttime = moment($("#Startdate").val(),"DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
+  let endtime =moment($("#Enddate").val(),"DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
   console.log(moment(starttime).format());
   var requestdata = {
     Title: $("#eventTitle").val(),
@@ -715,7 +722,7 @@ function cleardata() {
 
   $("#eventTitle,#eventDescritpion").val("");
   $("#Startdate,#Enddate").val("");
-  $("#Startdate,#Enddate").val(moment().format("YYYY/MM/DD HH:mm"));
+  $("#Startdate,#Enddate").val(moment().format("DD/MM/YYYY HH:mm"));
   $("#StartTime,#EndTime,#StartTimeHour,#EndTimeHour").val("00");
   $("#EventColor").val("0");
   $("#TypeOfEvent").val("0");
