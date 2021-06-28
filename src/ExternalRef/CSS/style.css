@@ -622,3 +622,7 @@ div#Vieweventtype .row {
 .view-page-option button.fc-today-button.fc-button.fc-button-primary{
     margin-right: 0!important;
   }
+ .alertify-notifier.ajs-right .ajs-message.ajs-visible {
+    white-space: break-spaces !important;
+    right: 350px !important;
+}

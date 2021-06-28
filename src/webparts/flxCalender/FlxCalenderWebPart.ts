@@ -11,7 +11,7 @@ import { SPComponentLoader } from "@microsoft/sp-loader";
 import styles from "./FlxCalenderWebPart.module.scss";
 import * as strings from "FlxCalenderWebPartStrings";
 import * as $ from "jquery";
-import { sp } from "@pnp/pnpjs";  
+import { sp } from "@pnp/pnpjs";
 import "fullcalendar";
 import { Calendar } from "@fullcalendar/core";
 import interactionPlugin from "@fullcalendar/interaction";
@@ -38,7 +38,7 @@ var EditID = "";
 let listUrl = "";
 var alleventitem = [];
 var dltid = "";
-var FilteredAdmin =[];
+var FilteredAdmin = [];
 var currentuser = "";
 export interface IFlxCalenderWebPartProps {
   description: string;
@@ -182,8 +182,8 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         
       <div class="modal-body  modalbody-CALENDAR">   
      
-      <div class="row bottomalign "><div class="col-1"></div><div class="col-2 text-center fw-bolder ">Title</div>
-      <div class="col-7 text-center fw-bolder headcoloralign ">Color</div></div>
+      <div class="row bottomalign "><div class="col-1"></div><div class="col-2 text-center fw-bolder Eventdata">Title</div>
+      <div class="col-7 text-center fw-bolder headcoloralign Eventdata">Color</div></div> 
       <div id="Vieweventtype"></div>    
        
     <div class="row align-items-start my-3 mx-2 addeventscreen"><div class="col-1"></div><div class="col-4">
@@ -262,22 +262,19 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $(".dlt" + editdata).show();
       $(".tick" + editdata).hide();
       $(".cancel" + editdata).hide();
-      $(".label" + editdata).show();   
+      $(".label" + editdata).show();
       $(".view" + editdata).hide();
     });
     $(document).on("click", ".tickiconeventtypes", async function () {
       var editdata;
       editdata = $(this).attr("data-id");
-       if (mandatoryforupdateaction()) 
-       {
+      if (mandatoryforupdateaction()) {
 
-        for(var i=0;i<alleventitem.length;i++)
-        {
-          if(editdata!=i)
-          {
-            if(alleventitem[i].Title==$(".clstitle"+editdata).val()||alleventitem[i].Color==$(".clstitlecolor"+editdata).val()){
+        for (var i = 0; i < alleventitem.length; i++) {
+          if (editdata != i) {
+            if (alleventitem[i].Title == $(".clstitle" + editdata).val() || alleventitem[i].Color == $(".clstitlecolor" + editdata).val()) {
               alertify.error("Please Enter Different Title/Color");
-             return false;
+              return false;
             }
           }
         }
@@ -288,50 +285,48 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       }
       console.log(editdata);
 
-      
+
     });
     $(document).on("click", ".deleteiconeventtypes", async function () {
       dltid = "";
       dltid = $(this).attr("data-id");
       console.log(dltid);
-      
+
       $(".cal-modal-dialog").show();
       //
     });
     $(document).on("click", "#cancelEventDelete", async function () {
-      
+
       $(".cal-modal-dialog").show();
-      
+
     });
-    $(document).on("click", "#btnDeleteEvent", async function () { 
+    $(document).on("click", "#btnDeleteEvent", async function () {
       await DeleteEventType(dltid);
     });
-    
+
     $("#btnEventClose").click(function () {
       BindTypes();
       geteventtype();
     });
     $("#btnEventSubmit").click(async function () {
-      if (mandatoryforaddaction()) 
-      {
-        for(var i=0;i<alleventitem.length;i++){
-          if(alleventitem[i].Title==$("#addnewevent").val()||alleventitem[i].Color==$("#addnewcolor").val()){
+      if (mandatoryforaddaction()) {
+        for (var i = 0; i < alleventitem.length; i++) {
+          if (alleventitem[i].Title == $("#addnewevent").val() || alleventitem[i].Color == $("#addnewcolor").val()) {
             alertify.error("Please Enter Different Title/Color");
-           return false;
+            return false;
           }
         }
         await inserteventtype();
-      } else 
-      {
+      } else {
         console.log("All fileds not filled");
       }
     });
     $("#Startdate").datetimepicker({
-      format:'d/m/Y H:i'
-      
+      format: 'd/m/Y H:i'
+
     });
     $("#Enddate").datetimepicker({
-      format:'d/m/Y H:m'
+      format: 'd/m/Y H:i'
     });
     var htmlfortime = "";
     // for(var i=0;i<24;i++)
@@ -360,13 +355,13 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     // $("#EndTimeHour").html(htmlforHour);
     $("#btnmodalSubmit").click(async function () {
       console.log($("#TypeOfEvent").val());
-      
+
       if (mandatoryforinsertevent()) {
-        await insertevent();   
+        await insertevent();
       } else {
         console.log("All fileds not filled");
       }
-    
+
     });
 
     // $(".btn-close,.btn-secondary").click(function()
@@ -377,15 +372,15 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     // });
 
     $("#btnEventModalClose").click(function () {
-      if (FilteredAdmin.length>0) {
-      $("#btnmodalSubmit").show();
-      $("#btnmodalEdit").hide();
-      $("#btnmodalDelete").hide();
+      if (FilteredAdmin.length > 0) {
+        $("#btnmodalSubmit").show();
+        $("#btnmodalEdit").hide();
+        $("#btnmodalDelete").hide();
       }
-      else{
+      else {
         $("#btnmodalSubmit").hide();
-      $("#btnmodalEdit").hide();
-      $("#btnmodalDelete").hide();
+        $("#btnmodalEdit").hide();
+        $("#btnmodalDelete").hide();
       }
     });
     $(".btn-openmodal").click(function () {
@@ -397,21 +392,21 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     });
     $(document).on("click", ".clsEventEdit", function () {
       $(".btn-openmodal").trigger("click");
-      if (FilteredAdmin.length>0) {
+      if (FilteredAdmin.length > 0) {
         $("#btnmodalDelete").show();
         $("#btnmodalEdit").show();
         $("#btnmodalSubmit").hide();
         $("#calendarModalLabel").text("Edit Event");
       }
-      else{
+      else {
         $("#calendarModalLabel").text("View Event");
         $("#btnmodalDelete").hide();
         $("#btnmodalEdit").hide();
         $("#btnmodalSubmit").hide();
       }
       $(".fc-popover").hide();
-      
-      
+
+
       // $("#btnmodalDelete").show();
       // $("#btnmodalEdit").show();
       // $("#btnmodalSubmit").hide();  
@@ -420,10 +415,10 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       var filteredarray = [];
       for (var i = 0; i < arrCalendarEvents.length; i++) {
         if (arrCalendarEvents[i].id == indexid) {
-          filteredarray.push(arrCalendarEvents[i]);            
+          filteredarray.push(arrCalendarEvents[i]);
         }
       }
-  
+
       if (filteredarray[0].title) $("#eventTitle").val(filteredarray[0].title);
       // $("#Startdate").val(moment(filteredarray[0].start).format("YYYY-MM-DD"));
       // $("#Enddate").val(moment(filteredarray[0].end).format("YYYY-MM-DD"));
@@ -445,14 +440,14 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         $("#eventDescritpion").val(filteredarray[0].description);
     });
 
-    $("#btnmodalEdit").click( async function () {
-      if (mandatoryforupdateeventtype()) {  
-        await updateevent(EditID);      
+    $("#btnmodalEdit").click(async function () {
+      if (mandatoryforupdateeventtype()) {
+        await updateevent(EditID);
       } else {
         console.log("All fileds not filled");
       }
-      
-    });  
+
+    });
     $("#btnmodalDelete").click(() => {
       (<HTMLElement>(
         document.querySelector(".modal-dialog.calendar-modal")
@@ -468,7 +463,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     $("#confirmDeleteEvent").click(() => {
       deleteEvent(EditID);
     });
-    
+
     //BindCalendar("");
   }
 
@@ -511,13 +506,14 @@ async function getadminfromsite() {
           Email: result[i].Email,
         });
       }
-      FilteredAdmin = AdminInfo.filter((admin)=>{return (admin.Email == currentuser)});
+      FilteredAdmin = AdminInfo.filter((admin) => { return (admin.Email == currentuser) });
       console.log(FilteredAdmin);
       getCalendarEvents();
       geteventtype();
     })
     .catch(function (err) {
-      alert("Group not found: " + err);
+      console.log(err);
+      //alert("Group not found: " + err);
     });
 }
 const BindTypes = async () => {
@@ -566,7 +562,7 @@ function BindCalendar(Calendardetails) {
       $(event.el).attr("data-trigger", "focus");
       $(event.el).attr("data-id", event.event.id);
       $(event.el).addClass("clsEventEdit");
-      
+
     },
   });
   calendar.refetchEvents();
@@ -616,7 +612,7 @@ async function getCalendarEvents() {
           title: items[i].Title,
           start: sdate,
           end: edate,
-          display:"list-item",
+          display: "list-item",
           description: items[i].Description,
           backgroundColor: items[i].Color.Color,
           borderColor: items[i].Color.Color,
@@ -625,15 +621,15 @@ async function getCalendarEvents() {
         });
       }
       BindCalendar(arrCalendarEvents);
-      if (FilteredAdmin.length<=0) 
-      {
+      if (FilteredAdmin.length <= 0) {
         disableallfields();
         $(".calendar-section").addClass("view-page-option");
       }
 
     })
     .catch(function (error) {
-      alert("Error In Calendar Webpart");
+      console.log(error);
+      //alert("Error In Calendar Webpart");
     });
 
 }
@@ -643,8 +639,8 @@ async function insertevent() {
   // var endtime=$("#Enddate").val()+"T"+$("#EndTime").val()+":"+$("#EndTimeHour").val()+":00";
   // let starttime = $("#Startdate").val().split(" ").join("T");
   // let endtime = $("#Enddate").val().split(" ").join("T");
-  let starttime = moment($("#Startdate").val(),"DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
-  let endtime =moment($("#Enddate").val(),"DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
+  let starttime = moment($("#Startdate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
+  let endtime = moment($("#Enddate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
   console.log($("#TypeOfEvent").val());
 
   var requestdata = {
@@ -667,7 +663,7 @@ async function insertevent() {
     .catch(function (error) {
       alert("Error Occured");
     });
-    $(".loader-section").hide();
+  $(".loader-section").hide();
 }
 async function updateevent(itemid) {
   $(".loader-section").show();
@@ -677,8 +673,8 @@ async function updateevent(itemid) {
   //Maasi
   // let starttime = $("#Startdate").val().split(" ").join("T");
   // let endtime = $("#Enddate").val().split(" ").join("T");
-  let starttime = moment($("#Startdate").val(),"DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
-  let endtime =moment($("#Enddate").val(),"DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
+  let starttime = moment($("#Startdate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
+  let endtime = moment($("#Enddate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
   console.log(moment(starttime).format());
   var requestdata = {
     Title: $("#eventTitle").val(),
@@ -700,7 +696,7 @@ async function updateevent(itemid) {
     .catch(function (error) {
       alert("Error Occured");
     });
-    $(".loader-section").hide();
+  $(".loader-section").hide();
 }
 const deleteEvent = async (itemid) => {
   $(".loader-section").show();
@@ -714,7 +710,7 @@ const deleteEvent = async (itemid) => {
     .catch((error) => {
       alert("Error Occured");
     });
-    $(".loader-section").hide();
+  $(".loader-section").hide();
 
 };
 function cleardata() {
@@ -738,69 +734,64 @@ async function geteventtype() {
   await sp.web.lists
     .getByTitle("TypeOfEvent")
     .items.select("*")
-    .orderBy("Modified",false)
+    .orderBy("Modified", false)
     .get()
     .then(async (item) => {
       var htmlforeventtype = "";
-      var htmlforbindeventtype="";
+      var htmlforbindeventtype = "";
+      var htmlfornoeventtype = " ";
       var count = 0;
       alleventitem = item;
       console.log("item");
-      console.log(alleventitem);   
+      console.log(alleventitem);
+
       if (item.length > 0) {
+        $(".Eventdata").show();
         for (var i = 0; i < item.length; i++) {
           count++;
           if (count == item.length) {
-            htmlforeventtype += `<div class="row align-items-start my-2 mx-2"><div class="col-1">${
-              i + 1
-            }</div><div class="col-4">
-            <div class="label${i} titlecolalign"><label class="">${
-              item[i].Title
-            }</label></div>
-        <input type="text" class="form-control rounded-0 titleevent clstitle${i} view${i}" data-id="${i}" value="${
-              item[i].Title
-            }"></div>     
+            htmlforeventtype += `<div class="row align-items-start my-2 mx-2"><div class="col-1">${i + 1
+              }</div><div class="col-4">
+            <div class="label${i} titlecolalign"><label class="">${item[i].Title
+              }</label></div>
+        <input type="text" class="form-control rounded-0 titleevent clstitle${i} view${i}" data-id="${i}" value="${item[i].Title
+              }"></div>     
         <div class="col-5">  
         <div class="label${i} coloralgin py-1"><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
-        <input type="text" class="form-control rounded-0 titlecolor clstitlecolor${i} view${i}" data-id="${i}" value="${
-              item[i].Color  
-            }"></div>
+        <input type="text" class="form-control rounded-0 titlecolor clstitlecolor${i} view${i}" data-id="${i}" value="${item[i].Color
+              }"></div>
        <div class="col-2 editicontypes">
        <span class="editiconeventtypes pencil${i}" data-id="${i}"></span>  
        <span class="deleteiconeventtypes dlt${i}" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal" data-id="${i}"></span> 
        <span class="tickiconeventtypes tick${i}" data-id="${i}"></span>
        <span class="canceliconeventtypes cancel${i}" data-id="${i}"></span>
-       <span class= "addiconeidttypes"> </span> </div></div>`;   
+       <span class= "addiconeidttypes"> </span> </div></div>`;
           } else {
-            htmlforeventtype += `<div class="row align-items-start my-2 mx-2"><div class="col-1">${
-              i + 1
-            }</div><div class="col-4">
-            <div class="label${i} titlecolalign"><label class="">${
-              item[i].Title
-            }</label></div>
-        <input type="text" class="form-control rounded-0 titleevent clstitle${i} view${i}" data-id="${i}" value="${
-              item[i].Title
-            }"></div>
+            htmlforeventtype += `<div class="row align-items-start my-2 mx-2"><div class="col-1">${i + 1
+              }</div><div class="col-4">
+            <div class="label${i} titlecolalign"><label class="">${item[i].Title
+              }</label></div>
+        <input type="text" class="form-control rounded-0 titleevent clstitle${i} view${i}" data-id="${i}" value="${item[i].Title
+              }"></div>
         <div class="col-5"> 
         <div class="label${i} coloralgin py-1"><span class ="squarecal" style="background-color:${item[i].Color}"></span><label class="alignlabelcol">${item[i].Color}</label></div>
-        <input type="text" class="form-control rounded-0 titlecolor clstitlecolor${i} view${i}" data-id="${i}" value="${
-              item[i].Color
-            }"></div>
+        <input type="text" class="form-control rounded-0 titlecolor clstitlecolor${i} view${i}" data-id="${i}" value="${item[i].Color
+              }"></div>
        <div class="col-2 editicontypes">  
        <span class="editiconeventtypes pencil${i}" data-id="${i}"></span>  
        <span class="deleteiconeventtypes dlt${i}" data-bs-toggle="modal" data-bs-target="#dealsAnADeleteModal" data-id="${i}"></span> 
        <span class="tickiconeventtypes tick${i}" data-id="${i}"></span>
        <span class="canceliconeventtypes cancel${i}" data-id="${i}"></span> </div></div>`;
           }
-          htmlforbindeventtype+=`<li class="py-2  d-flex row eventborder">         
+          htmlforbindeventtype += `<li class="py-2  d-flex row eventborder">         
           <div class="col-1"><span class= "eventtypescircle" style="background-color:${item[i].Color}"><span></div><div class="col-10 ms-2">${item[i].Title}</div>
-          </li>`;         
-           //htmlforbindeventtype+=`<div style="background-color:${item[i].Color}"></div><a href="#" class="list-group-item list-group-item-action text-center" style="background-color:${item[i].Color}">${item[i].Title}</a>`;
+          </li>`;
+          //htmlforbindeventtype+=`<div style="background-color:${item[i].Color}"></div><a href="#" class="list-group-item list-group-item-action text-center" style="background-color:${item[i].Color}">${item[i].Title}</a>`;
         }
         $("#Vieweventtype").html("");
-        $("#Vieweventtype").html(htmlforeventtype);   
-         $("#bindeventtype").html("");
-         $("#bindeventtype").html(htmlforbindeventtype);
+        $("#Vieweventtype").html(htmlforeventtype);
+        $("#bindeventtype").html("");
+        $("#bindeventtype").html(htmlforbindeventtype);
         $(".tickiconeventtypes").hide();
         $(".canceliconeventtypes").hide();
         $(".titleevent").hide();
@@ -814,11 +805,15 @@ async function geteventtype() {
           $("#addnewcolor").val("");
           $(".addeventscreen").hide();
         });
-        if (FilteredAdmin.length<=0) 
-      {
-        $(".calcustomize").hide();
-      }
+        if (FilteredAdmin.length <= 0) {
+          $(".calcustomize").hide();
+        }
 
+      }
+      else {
+        $("#Vieweventtype").html("");
+        $("#bindeventtype").html("");
+        $(".addeventscreen").show();
       }
     })
     .catch((error) => {
@@ -844,7 +839,7 @@ async function inserteventtype() {
     .catch(function (error) {
       alert("Error Occured");
     });
-    $(".loader-section").hide();
+  $(".loader-section").hide();
 
 }
 async function updateeventtype(TypeID) {
@@ -874,7 +869,7 @@ async function updateeventtype(TypeID) {
     .catch(function (error) {
       alert("Error Occured");
     });
-    $(".loader-section").hide();
+  $(".loader-section").hide();
 
 }
 function DeleteEventType(TypeID) {
@@ -891,39 +886,43 @@ function DeleteEventType(TypeID) {
     })
     .catch((error) => {
       alert("Error Occured");
-    });  
-    $(".loader-section").hide();
+    });
+  $(".loader-section").hide();
 
 }
 function mandatoryforaddaction() {
 
   var isAllvalueFilled = true;
   if (!$("#addnewevent").val()) {
-    alertify.error("Please enter Title"); 
+    alertify.error("Please enter Title");
     isAllvalueFilled = false;
   } else if (!$("#addnewcolor").val()) {
     alertify.error("Please enter Color");
     isAllvalueFilled = false;
-  }     
+  }
   return isAllvalueFilled;
 }
-function mandatoryforinsertevent(){
+function mandatoryforinsertevent() {
   var isAllvalueFilled = true;
   if (!$("#eventTitle").val()) {
     alertify.error("Please enter Title");
     isAllvalueFilled = false;
-  } 
-  else if ($("#TypeOfEvent").val() == "0")  {    
+  }
+  else if ($("#Startdate").val() > $("#Enddate").val()) {
+    alertify.error("End Date should be greater than Start Date");
+    isAllvalueFilled = false;
+  }
+  else if ($("#TypeOfEvent").val() == "0") {
     alertify.error("Please Select Type of Event");
-    isAllvalueFilled = false;    
-  }  
+    isAllvalueFilled = false;
+  }
   // else if (!$("#eventDescritpion").val()) {
   //   alertify.error("Please Enter Description");
   //   isAllvalueFilled = false;
   // }
- 
+
   return isAllvalueFilled;
-}  
+}
 function mandatoryforupdateaction() {
   var isAllvalueFilled = true;
   if (!$(".titleevent").val()) {
@@ -931,7 +930,7 @@ function mandatoryforupdateaction() {
     isAllvalueFilled = false;
   } else if (!$(".titlecolor").val()) {
     alertify.error("Please enter Color");
-    isAllvalueFilled = false;   
+    isAllvalueFilled = false;
   }
   return isAllvalueFilled;
 }
@@ -940,11 +939,15 @@ function mandatoryforupdateeventtype() {
   if (!$("#eventTitle").val()) {
     alertify.error("Please Enter the Title");
     isAllvalueFilled = false;
-  } 
-  else if ($("#TypeOfEvent").val() == "0")  {    
+  }
+  else if ($("#Startdate").val() > $("#Enddate").val()) {
+    alertify.error("End Date should be greater than Start Date");
+    isAllvalueFilled = false;
+  }
+  else if ($("#TypeOfEvent").val() == "0") {
     alertify.error("Please Select Type of Event");
-    isAllvalueFilled = false;    
-  }   
+    isAllvalueFilled = false;
+  }
   // else if (!$("#eventDescritpion").val()) {
   //   alertify.error("Please Enter Description");
   //   isAllvalueFilled = false;  
@@ -987,11 +990,10 @@ function AlertMessage(strMewssageEN) {
     .setHeader("<div class='fw-bold alertifyConfirmation'>Confirmation</div> ")
     .set("closable", false);
 }
-function disableallfields()
-{
-  $("#eventTitle").prop('disabled',true);
-  $("#Startdate").prop('disabled',true);
-  $("#Enddate").prop('disabled',true);
-  $("#TypeOfEvent").prop('disabled',true);
-  $("#eventDescritpion").prop('disabled',true);
+function disableallfields() {
+  $("#eventTitle").prop('disabled', true);
+  $("#Startdate").prop('disabled', true);
+  $("#Enddate").prop('disabled', true);
+  $("#TypeOfEvent").prop('disabled', true);
+  $("#eventDescritpion").prop('disabled', true);
 }
