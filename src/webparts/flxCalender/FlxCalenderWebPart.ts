@@ -903,12 +903,14 @@ function mandatoryforaddaction() {
   return isAllvalueFilled;
 }
 function mandatoryforinsertevent() {
+  let startdatemt = moment($("#Startdate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
+  let enddatemt = moment($("#Enddate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
   var isAllvalueFilled = true;
   if (!$("#eventTitle").val()) {
     alertify.error("Please enter Title");
     isAllvalueFilled = false;
   }
-  else if ($("#Startdate").val() > $("#Enddate").val()) {
+  else if (startdatemt > enddatemt) {
     alertify.error("End Date should be greater than Start Date");
     isAllvalueFilled = false;
   }
@@ -935,12 +937,14 @@ function mandatoryforupdateaction() {
   return isAllvalueFilled;
 }
 function mandatoryforupdateeventtype() {
+  let startdatemt = moment($("#Startdate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
+  let enddatemt = moment($("#Enddate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
   var isAllvalueFilled = true;
   if (!$("#eventTitle").val()) {
     alertify.error("Please Enter the Title");
     isAllvalueFilled = false;
   }
-  else if ($("#Startdate").val() > $("#Enddate").val()) {
+  else if (startdatemt > enddatemt) {
     alertify.error("End Date should be greater than Start Date");
     isAllvalueFilled = false;
   }
