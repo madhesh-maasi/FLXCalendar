@@ -40,6 +40,9 @@ var alleventitem = [];
 var dltid = "";
 var FilteredAdmin = [];
 var currentuser = "";
+let allDayEvent = false;
+let startDateFormat = 'd/m/Y H:i';
+let endDateFormat = 'd/m/Y H:i';
 export interface IFlxCalenderWebPartProps {
   description: string;
 }
@@ -124,6 +127,17 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         <option value="00">00</option>
         </select></div>   
         </div>-->     
+        <div class="row align-items-center my-3">
+        <div class="col-4"></div><div class="col-1"></div>
+        <div class="col-7">
+        <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="allDayEvent">
+        <label class="form-check-label" for="allDayEvent">
+        All Day Event
+        </label>
+        </div>
+        </div> 
+        </div>
         <div class="row align-items-center my-3"><div class="col-4 titlecalman">Type of Event</div><div class="col-1">:</div>
         <div class="col-7 custom-arrow"><select class="form-control rounded-0" id="TypeOfEvent" aria-describedby="">
         <option>Select</option></select></div> </div> 
@@ -321,13 +335,15 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         console.log("All fileds not filled");
       }
     });
-    $("#Startdate").datetimepicker({
-      format: 'd/m/Y H:i'
-
+    $(document).on("change", "#allDayEvent",()=>{
+      allDayEvent = $("#allDayEvent").is(":checked")?true:false;
+      datePickerFormat();
+      
     });
-    $("#Enddate").datetimepicker({
-      format: 'd/m/Y H:i'
-    });
+    datePickerFormat();
+      
+   
+    
     var htmlfortime = "";
     // for(var i=0;i<24;i++)
     // {
@@ -353,6 +369,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     // $("#StartTimeHour").html(htmlforHour);
     // $("#EndTimeHour").html('');
     // $("#EndTimeHour").html(htmlforHour);
+
     $("#btnmodalSubmit").click(async function () {
       console.log($("#TypeOfEvent").val());
 
@@ -376,6 +393,8 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
         $("#btnmodalSubmit").show();
         $("#btnmodalEdit").hide();
         $("#btnmodalDelete").hide();
+        $("#allDayEvent").prop("checked",false);
+        allDayEvent = false
       }
       else {
         $("#btnmodalSubmit").hide();
@@ -430,6 +449,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $("#Enddate").val(
         moment(filteredarray[0].end).format("DD/MM/YYYY HH:mm")
       );
+      $("#allDayEvent").prop("checked",filteredarray[0].allDayEventCheck)
       // $("#StartTime").val(moment(filteredarray[0].start).format("HH"));
       // $("#StartTimeHour").val(moment(filteredarray[0].start).format("mm"));
       // $("#EndTime").val(moment(filteredarray[0].end).format("HH"));
@@ -618,6 +638,7 @@ async function getCalendarEvents() {
           borderColor: items[i].Color.Color,
           ColorId: items[i].ColorId,
           TypeOfEvent: items[i].TypeOfEventId,
+          allDayEventCheck : items[i].AllDayEvent == true? true: false
         });
       }
       BindCalendar(arrCalendarEvents);
@@ -650,6 +671,7 @@ async function insertevent() {
     Description: $("#eventDescritpion").val(),
     TypeOfEventId: parseInt($("#TypeOfEvent").val()),
     ColorId: parseInt($("#TypeOfEvent").val()),
+    AllDayEvent : allDayEvent
   };
   await sp.web.lists
     .getByTitle("EventsList")
@@ -683,6 +705,7 @@ async function updateevent(itemid) {
     Description: $("#eventDescritpion").val(),
     TypeOfEventId: parseInt($("#TypeOfEvent").val()),
     ColorId: parseInt($("#TypeOfEvent").val()),
+    AllDayEvent : allDayEvent
   };
   await sp.web.lists
     .getByTitle("EventsList")
@@ -1000,4 +1023,25 @@ function disableallfields() {
   $("#Enddate").prop('disabled', true);
   $("#TypeOfEvent").prop('disabled', true);
   $("#eventDescritpion").prop('disabled', true);
+}
+function datePickerFormat(){
+  if(!allDayEvent){
+    startDateFormat = 'd/m/Y H:i';
+    endDateFormat =  'd/m/Y H:i';
+  }else{
+    startDateFormat = 'd/m/Y 00:00';
+    endDateFormat =  'd/m/Y 23:59';
+  }
+
+  $("#Startdate").datetimepicker({
+    format: startDateFormat
+  });
+  
+  $("#Enddate").datetimepicker({
+          format: endDateFormat
+});
+if(allDayEvent){
+  $("#Startdate").val($("#Startdate").val().split(" ")[0] + " 00:00");
+  $("#Enddate").val($("#Enddate").val().split(" ")[0] + " 23:59");
+}
 }
