@@ -632,7 +632,7 @@ async function getCalendarEvents() {
           title: items[i].Title,
           start: sdate,
           end: edate,
-          display: "list-item",
+          display: "block",
           description: items[i].Description,
           backgroundColor: items[i].Color.Color,
           borderColor: items[i].Color.Color,
