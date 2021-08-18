@@ -7,7 +7,7 @@ import { BaseClientSideWebPart } from "@microsoft/sp-webpart-base";
 import { escape } from "@microsoft/sp-lodash-subset";
 
 import { SPComponentLoader } from "@microsoft/sp-loader";
-
+import { MSGraphClient } from '@microsoft/sp-http';
 import styles from "./FlxCalenderWebPart.module.scss";
 import * as strings from "FlxCalenderWebPartStrings";
 import * as $ from "jquery";
@@ -43,6 +43,7 @@ var currentuser = "";
 let allDayEvent = false;
 let startDateFormat = 'd/m/Y H:i';
 let endDateFormat = 'd/m/Y H:i';
+let thisContext;
 export interface IFlxCalenderWebPartProps {
   description: string;
 }
@@ -57,6 +58,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   }
 
   public render(): void {
+    thisContext = this.context;
     listUrl = this.context.pageContext.web.absoluteUrl;
     currentuser = this.context.pageContext.user.email;
     var siteindex = listUrl.toLocaleLowerCase().indexOf("sites");
@@ -255,6 +257,10 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
            <!-- Delete Modal -->  
       
       `;
+      $(document).on("click","button.fc-prev-button.fc-button.fc-button-primary",()=>{
+        console.log("before");
+        
+      })
     BindTypes();
     getadminfromsite();
     $(document).on("click", ".editiconeventtypes", async function () {
@@ -527,7 +533,6 @@ async function getadminfromsite() {
         });
       }
       FilteredAdmin = AdminInfo.filter((admin) => { return (admin.Email == currentuser) });
-      console.log(FilteredAdmin);
       getCalendarEvents();
       geteventtype();
     })
@@ -581,7 +586,7 @@ function BindCalendar(Calendardetails) {
     eventDidMount: function (event) {
       $(event.el).attr("data-trigger", "focus");
       $(event.el).attr("data-id", event.event.id);
-      $(event.el).addClass("clsEventEdit");
+      $(event.el).addClass('clsEventEdit');
 
     },
   });
@@ -598,7 +603,8 @@ function BindCalendar(Calendardetails) {
 }
 
 async function getCalendarEvents() {
-
+  var that = this;
+  
   await sp.web.lists
     .getByTitle("EventsList")
     .items.select(
@@ -614,7 +620,6 @@ async function getCalendarEvents() {
     .get()
     .then((items: any) => {
       console.log(items);
-
       arrCalendarEvents = [];
       for (var i = 0; i < items.length; i++) {
         var sdate =
@@ -628,7 +633,7 @@ async function getCalendarEvents() {
           moment(items[i].EndDate).format("HH:mm") +
           ":00";
         arrCalendarEvents.push({
-          id: items[i].ID,
+          // id: items[i].ID,
           title: items[i].Title,
           start: sdate,
           end: edate,
@@ -641,18 +646,46 @@ async function getCalendarEvents() {
           allDayEventCheck : items[i].AllDayEvent == true? true: false
         });
       }
-      BindCalendar(arrCalendarEvents);
+      
+      
+      
       if (FilteredAdmin.length <= 0) {
         disableallfields();
         $(".calendar-section").addClass("view-page-option");
       }
 
+    }).then(()=>{
+      thisContext.msGraphClientFactory.getClient()
+      .then((_graphClient: MSGraphClient): void => {
+        _graphClient.api('/me/calendar/events').get().then((events)=>{
+          console.log(events.value);
+          let outlookEvents = events.value
+          
+          outlookEvents.forEach((evt,i)=>{
+            arrCalendarEvents.push({
+              // id: i,
+              title: evt.subject,
+              start: evt.start.dateTime.split(".")[0],
+              end: evt.end.dateTime.split(".")[0],
+              display: "block",
+              description: "test",
+              backgroundColor: "#ce7e00",
+              borderColor: "#ce7e00",
+              ColorId: 89,
+              TypeOfEvent: 89,
+              allDayEventCheck : evt.isAllDay
+            });
+          })
+      })})
+      console.log(arrCalendarEvents);
+    setTimeout(function(){ BindCalendar(arrCalendarEvents); }, 1000);
     })
     .catch(function (error) {
       console.log(error);
       //alert("Error In Calendar Webpart");
     });
-
+    
+    
 }
 async function insertevent() {
   $(".loader-section").show();
