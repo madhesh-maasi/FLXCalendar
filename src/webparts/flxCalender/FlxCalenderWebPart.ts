@@ -43,7 +43,16 @@ var currentuser = "";
 let allDayEvent = false;
 let startDateFormat = 'd/m/Y H:i';
 let endDateFormat = 'd/m/Y H:i';
-let thisContext;
+let thisContext,calendar;
+var copyarrCalendarEvents = [];
+var MastercopyarrCalendarEvents = [];
+let MonthDif = 0;
+let outlookEvents =[];
+var flatUsers =[];
+var outlookEventID;
+var outlookEventClr;
+var timeZone = "";
+var Outlookmonth;
 export interface IFlxCalenderWebPartProps {
   description: string;
 }
@@ -257,10 +266,6 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
            <!-- Delete Modal -->  
       
       `;
-      $(document).on("click","button.fc-prev-button.fc-button.fc-button-primary",()=>{
-        console.log("before");
-        
-      })
     BindTypes();
     getadminfromsite();
     $(document).on("click", ".editiconeventtypes", async function () {
@@ -413,6 +418,16 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $("#btnmodalSubmit").show();
       $("#btnmodalEdit").hide();
       $("#btnmodalDelete").hide();
+      if(FilteredAdmin.length > 0)
+      {
+        $("#eventTitle").prop('disabled', false);
+        $("#Startdate").prop('disabled', false);
+        $("#Enddate").prop('disabled', false);
+        $("#TypeOfEvent").prop('disabled', false);
+        $("#eventDescritpion").prop('disabled', false);
+        $("#allDayEvent").prop('disabled', false);
+      }
+
       cleardata();
     });
     $(document).on("click", ".clsEventEdit", function () {
@@ -464,6 +479,23 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       $("#EventColor").val(filteredarray[0].ColorId);
       if (filteredarray[0].description)
         $("#eventDescritpion").val(filteredarray[0].description);
+
+        if(filteredarray[0].eventType == "outlook"){
+          disableallfields();
+          $("#calendarModalLabel").text("View Event");
+          $("#btnmodalDelete").hide();
+          $("#btnmodalEdit").hide();
+          $("#btnmodalSubmit").hide();
+        }
+        else if(FilteredAdmin.length > 0)
+        {
+          $("#eventTitle").prop('disabled', false);
+          $("#Startdate").prop('disabled', false);
+          $("#Enddate").prop('disabled', false);
+          $("#TypeOfEvent").prop('disabled', false);
+          $("#eventDescritpion").prop('disabled', false);
+          $("#allDayEvent").prop('disabled', false);
+        }
     });
 
     $("#btnmodalEdit").click(async function () {
@@ -520,6 +552,13 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
   }
 }
 async function getadminfromsite() {
+
+  Outlookmonth;
+  let listLocation  = await sp.web.getList(listUrl + "OutlookConfigList").items.orderBy("Modified",false).get(); 
+  console.log(listLocation);
+  Outlookmonth=listLocation[0].Months;
+
+
   var AdminInfo = [];
   await sp.web.siteGroups
     .getByName("FLX Admins")
@@ -533,6 +572,7 @@ async function getadminfromsite() {
         });
       }
       FilteredAdmin = AdminInfo.filter((admin) => { return (admin.Email == currentuser) });
+      console.log(FilteredAdmin);
       getCalendarEvents();
       geteventtype();
     })
@@ -571,7 +611,7 @@ function BindCalendar(Calendardetails) {
 
   var calendarEl = document.getElementById("myCalendar");
 
-  var calendar = new Calendar(calendarEl, {
+   calendar = new Calendar(calendarEl, {
     plugins: [interactionPlugin, dayGridPlugin, timeGridPlugin, listPlugin],
     headerToolbar: {
       left: "prev,next today",
@@ -586,25 +626,125 @@ function BindCalendar(Calendardetails) {
     eventDidMount: function (event) {
       $(event.el).attr("data-trigger", "focus");
       $(event.el).attr("data-id", event.event.id);
-      $(event.el).addClass('clsEventEdit');
+      $(event.el).addClass("clsEventEdit");
 
     },
   });
   calendar.refetchEvents();
   calendar.render();
-  $(".clsEventEdit").each(function () {
+  $(".fc-event-draggable").each(function () {
     $(this).removeClass("fc-event-draggable");
-
+    $(this).addClass('clsEventEdit');
   });
   cleardata();
   $("#Startdate,#Enddate").val(moment().format("YYYY-MM-DD"));
   //$(".loader-section").hide();
+  $('.fc-prev-button span,.fc-next-button span').unbind('click');
 
 }
 
+async function getchangesOutlookEvents(firstDayOfMonth,LastDayOfMonth) {
+  thisContext.msGraphClientFactory.getClient()
+  .then((_graphClient: MSGraphClient): void => {
+    _graphClient.api('/me/mailboxSettings/timeZone').get().then((zoneTime)=>{
+      timeZone = zoneTime.value;
+      
+    _graphClient.api('/me/events').headers({Prefer:'outlook.timezone="'+timeZone+'"'}).filter("start/datetime ge '" + firstDayOfMonth + "' and end/datetime le '"+ LastDayOfMonth +"'").top(999).get().then((events)=>{
+      //Kamesh .filter("startDatetime ge '" + firstDayOfMonth + "'and endDatetime le '"+ LastDayOfMonth +"'")
+      //Madhesh .filter("start.dateTime ge '" + `${firstDayOfMonth.split("Z")[0]}0000` + "'and end.dateTime le '"+`${ LastDayOfMonth.split("Z")[0]}0000`  +"'")
+      //headers({Prefer:'outlook.timezone="'+timeZone+'"'})
+      outlookEvents =[];
+      if(events)
+            {
+              var nextLink=events["@odata.nextLink"]
+              outlookEvents.push(events.value);
+              if(nextLink)
+              getSkippedUsers(nextLink,outlookEvents,_graphClient);
+              else
+              {
+                // flatUsers=outlookEvents.flat();
+                 var flatUsers =outlookEvents.reduce(function(a, b) {
+                  return a.concat(b);
+                });
+                 flatUsers.forEach((evt,i)=>{
+                  var sdate =
+                  moment(evt.start.dateTime).format("YYYY-MM-DD") +
+                  "T" +
+                  moment(evt.start.dateTime).format("HH:mm") +
+                  ":00";
+                var edate =
+                  moment(evt.end.dateTime).format("YYYY-MM-DD") +
+                  "T" +
+                  moment(evt.end.dateTime).format("HH:mm") +
+                  ":00";
+                  arrCalendarEvents.push({
+                    id: evt.id,
+                    title: evt.subject,
+                    start:sdate,
+                    end: edate,
+                    display: "block",
+                    description: evt.bodyPreview,
+                    backgroundColor: outlookEventClr,
+                    borderColor: outlookEventClr,
+                    ColorId: 89,
+                    TypeOfEvent: outlookEventID,
+                    allDayEventCheck : evt.isAllDay,
+                    eventType: "outlook"
+                  });
+                });
+                setTimeout(function(){ BindCalendar(arrCalendarEvents); }, 1000);
+              }
+              
+            }
+  });
+});
+});
+}
+async function getSkippedUsers (skip,outlookEvents,_graphClient){
+  await _graphClient.api(skip).headers({Prefer:'outlook.timezone="'+timeZone+'"'}).get((error2,response2: any, rawResponse?: any) => {
+    outlookEvents.push(response2.value);
+     var nextLink=response2["@odata.nextLink"]
+     if(nextLink)
+     getSkippedUsers(nextLink,outlookEvents,_graphClient)
+     else
+     {
+      var flatUsers =outlookEvents.reduce(function(a, b) {
+        return a.concat(b);
+      });
+        flatUsers.forEach((evt,i)=>{
+          var sdate =
+          moment(evt.start.dateTime).format("YYYY-MM-DD") +
+          "T" +
+          moment(evt.start.dateTime).format("HH:mm") +
+          ":00";
+        var edate =
+          moment(evt.end.dateTime).format("YYYY-MM-DD") +
+          "T" +
+          moment(evt.end.dateTime).format("HH:mm") +
+          ":00";
+            arrCalendarEvents.push({
+              id: evt.id,
+              title: evt.subject,
+              start: sdate,
+              end: edate,
+              display: "block",
+              description: evt.bodyPreview,
+              backgroundColor:outlookEventClr,
+              borderColor: outlookEventClr,
+              ColorId: 89,
+              TypeOfEvent: outlookEventID,
+              allDayEventCheck : evt.isAllDay,
+              eventType: "outlook"
+            });
+          });
+          setTimeout(function(){ BindCalendar(arrCalendarEvents); }, 1000);
+     }
+ })
+ }
+
 async function getCalendarEvents() {
   var that = this;
-  
+
   await sp.web.lists
     .getByTitle("EventsList")
     .items.select(
@@ -620,6 +760,7 @@ async function getCalendarEvents() {
     .get()
     .then((items: any) => {
       console.log(items);
+
       arrCalendarEvents = [];
       for (var i = 0; i < items.length; i++) {
         var sdate =
@@ -633,7 +774,7 @@ async function getCalendarEvents() {
           moment(items[i].EndDate).format("HH:mm") +
           ":00";
         arrCalendarEvents.push({
-          // id: items[i].ID,
+          id: items[i].ID,
           title: items[i].Title,
           start: sdate,
           end: edate,
@@ -643,49 +784,43 @@ async function getCalendarEvents() {
           borderColor: items[i].Color.Color,
           ColorId: items[i].ColorId,
           TypeOfEvent: items[i].TypeOfEventId,
-          allDayEventCheck : items[i].AllDayEvent == true? true: false
+          allDayEventCheck : items[i].AllDayEvent == true? true: false,
+          eventType: "internal"
         });
       }
-      
-      
-      
+      copyarrCalendarEvents= arrCalendarEvents;
+      MastercopyarrCalendarEvents = arrCalendarEvents;
+
       if (FilteredAdmin.length <= 0) {
         disableallfields();
         $(".calendar-section").addClass("view-page-option");
       }
 
     }).then(()=>{
-      thisContext.msGraphClientFactory.getClient()
-      .then((_graphClient: MSGraphClient): void => {
-        _graphClient.api('/me/calendar/events').get().then((events)=>{
-          console.log(events.value);
-          let outlookEvents = events.value
-          
-          outlookEvents.forEach((evt,i)=>{
-            arrCalendarEvents.push({
-              // id: i,
-              title: evt.subject,
-              start: evt.start.dateTime.split(".")[0],
-              end: evt.end.dateTime.split(".")[0],
-              display: "block",
-              description: "test",
-              backgroundColor: "#ce7e00",
-              borderColor: "#ce7e00",
-              ColorId: 89,
-              TypeOfEvent: 89,
-              allDayEventCheck : evt.isAllDay
-            });
-          })
-      })})
-      console.log(arrCalendarEvents);
-    setTimeout(function(){ BindCalendar(arrCalendarEvents); }, 1000);
+
+      // var sdate = new Date();
+      // sdate.setMonth(sdate.getMonth() - 3);
+
+      // var edate = new Date();
+      // edate.setMonth(edate.getMonth() + 3);
+
+      var date = new Date();
+      var firstDay : any = new Date(date.getFullYear(), date.getMonth(), 1);
+      var lastDay : any = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+      firstDay.setMonth(firstDay.getMonth() - Outlookmonth);
+      lastDay.setMonth(lastDay.getMonth() + Outlookmonth);
+
+      var firstDayOfMonth = new Date(firstDay).toISOString().split("T")[0]+"T12:00:00.000Z";
+      var LastDayOfMonth = new Date(lastDay).toISOString().split("T")[0]+"T12:00:00.000Z";
+      getchangesOutlookEvents(firstDayOfMonth,LastDayOfMonth)
+
     })
     .catch(function (error) {
       console.log(error);
       //alert("Error In Calendar Webpart");
     });
-    
-    
+
 }
 async function insertevent() {
   $(".loader-section").show();
@@ -805,6 +940,13 @@ async function geteventtype() {
         $(".Eventdata").show();
         for (var i = 0; i < item.length; i++) {
           count++;
+
+          if(item[i].Title == "Outlook")
+          {
+            outlookEventID = item[i].ID;
+            outlookEventClr = item[i].Color;
+          }
+
           if (count == item.length) {
             htmlforeventtype += `<div class="row align-items-start my-2 mx-2"><div class="col-1">${i + 1
               }</div><div class="col-4">
@@ -1056,6 +1198,7 @@ function disableallfields() {
   $("#Enddate").prop('disabled', true);
   $("#TypeOfEvent").prop('disabled', true);
   $("#eventDescritpion").prop('disabled', true);
+  $("#allDayEvent").prop('disabled', true);
 }
 function datePickerFormat(){
   if(!allDayEvent){
