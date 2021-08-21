@@ -271,7 +271,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     $(document).on("click", ".editiconeventtypes", async function () {
       var editdata = "";
       editdata = $(this).attr("data-id");
-      console.log(editdata);
+      //console.log(editdata);
       $(".pencil" + editdata).hide();
       $(".dlt" + editdata).hide();
       $(".tick" + editdata).show();
@@ -282,7 +282,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     $(document).on("click", ".canceliconeventtypes", async function () {
       var editdata = "";
       editdata = $(this).attr("data-id");
-      console.log(editdata);
+      //console.log(editdata);
       $(".pencil" + editdata).show();
       $(".dlt" + editdata).show();
       $(".tick" + editdata).hide();
@@ -308,14 +308,14 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
       } else {
         console.log("All fileds not filled");
       }
-      console.log(editdata);
+      //console.log(editdata);
 
 
     });
     $(document).on("click", ".deleteiconeventtypes", async function () {
       dltid = "";
       dltid = $(this).attr("data-id");
-      console.log(dltid);
+      //console.log(dltid);
 
       $(".cal-modal-dialog").show();
       //
@@ -382,7 +382,7 @@ export default class FlxCalenderWebPart extends BaseClientSideWebPart<IFlxCalend
     // $("#EndTimeHour").html(htmlforHour);
 
     $("#btnmodalSubmit").click(async function () {
-      console.log($("#TypeOfEvent").val());
+      //console.log($("#TypeOfEvent").val());
 
       if (mandatoryforinsertevent()) {
         await insertevent();
@@ -555,7 +555,7 @@ async function getadminfromsite() {
 
   Outlookmonth;
   let listLocation  = await sp.web.getList(listUrl + "OutlookConfigList").items.orderBy("Modified",false).get(); 
-  console.log(listLocation);
+  //console.log(listLocation);
   Outlookmonth=listLocation[0].Months;
 
 
@@ -572,7 +572,7 @@ async function getadminfromsite() {
         });
       }
       FilteredAdmin = AdminInfo.filter((admin) => { return (admin.Email == currentuser) });
-      console.log(FilteredAdmin);
+     // console.log(FilteredAdmin);
       getCalendarEvents();
       geteventtype();
     })
@@ -646,8 +646,10 @@ function BindCalendar(Calendardetails) {
 async function getchangesOutlookEvents(firstDayOfMonth,LastDayOfMonth) {
   thisContext.msGraphClientFactory.getClient()
   .then((_graphClient: MSGraphClient): void => {
-    _graphClient.api('/me/mailboxSettings/timeZone').get().then((zoneTime)=>{
-      timeZone = zoneTime.value;
+    // _graphClient.api('/me/mailboxSettings/timeZone').get().then((zoneTime)=>{
+    //   timeZone = zoneTime.value;
+    timeZone ="Eastern Standard Time";//for live time zone
+    //timeZone ="Indian Standard Time";//for local time zone
       
     _graphClient.api('/me/events').headers({Prefer:'outlook.timezone="'+timeZone+'"'}).filter("start/datetime ge '" + firstDayOfMonth + "' and end/datetime le '"+ LastDayOfMonth +"'").top(999).get().then((events)=>{
       //Kamesh .filter("startDatetime ge '" + firstDayOfMonth + "'and endDatetime le '"+ LastDayOfMonth +"'")
@@ -697,7 +699,7 @@ async function getchangesOutlookEvents(firstDayOfMonth,LastDayOfMonth) {
               
             }
   });
-});
+//});
 });
 }
 async function getSkippedUsers (skip,outlookEvents,_graphClient){
@@ -759,7 +761,7 @@ async function getCalendarEvents() {
     .top(5000)
     .get()
     .then((items: any) => {
-      console.log(items);
+      //console.log(items);
 
       arrCalendarEvents = [];
       for (var i = 0; i < items.length; i++) {
@@ -830,7 +832,7 @@ async function insertevent() {
   // let endtime = $("#Enddate").val().split(" ").join("T");
   let starttime = moment($("#Startdate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
   let endtime = moment($("#Enddate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
-  console.log($("#TypeOfEvent").val());
+ // console.log($("#TypeOfEvent").val());
 
   var requestdata = {
     Title: $("#eventTitle").val(),
@@ -865,7 +867,7 @@ async function updateevent(itemid) {
   // let endtime = $("#Enddate").val().split(" ").join("T");
   let starttime = moment($("#Startdate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
   let endtime = moment($("#Enddate").val(), "DD/MM/YYYY HH:mm").format("YYYY/MM/DDTHH:mm");
-  console.log(moment(starttime).format());
+ // console.log(moment(starttime).format());
   var requestdata = {
     Title: $("#eventTitle").val(),
     StartDate: starttime,
@@ -933,8 +935,8 @@ async function geteventtype() {
       var htmlfornoeventtype = " ";
       var count = 0;
       alleventitem = item;
-      console.log("item");
-      console.log(alleventitem);
+     // console.log("item");
+      //console.log(alleventitem);
 
       if (item.length > 0) {
         $(".Eventdata").show();
